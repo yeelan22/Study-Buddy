@@ -1,0 +1,9 @@
+export { Dashboard } from './Dashboard';
+export { GoalBreakdown } from './GoalBreakdown';
+export { JournalToughts } from './JournalToughts';
+export { MemoryZone } from './MemoryZone';
+export { MindMap } from './MindMap';
+export { Settings } from './Settings';
+export { UploadNotes } from './UploadNotes';
+export { ChatSmart } from './ChatSmart';
+export { LandingPage } from './LandingPage';
