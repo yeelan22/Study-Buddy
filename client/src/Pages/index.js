@@ -7,3 +7,5 @@ export { Settings } from './Settings';
 export { UploadNotes } from './UploadNotes';
 export { ChatSmart } from './ChatSmart';
 export { LandingPage } from './LandingPage';
+export { Login } from './Login';
+export { Register } from './Register';

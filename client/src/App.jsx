@@ -1,22 +1,25 @@
-import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LandingPage from './pages/LandingPage';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import { useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import ProtectedLayout from './layouts/ProtectedLayout';
 import DashboardLayout from './layouts/DashboardLayout';
 import {
   Dashboard, ChatSmart, GoalBreakdown,
   JournalToughts, MemoryZone, MindMap,
-  Settings, UploadNotes
+  Settings, UploadNotes, LandingPage,
+  Login, Register
 } from "./Pages";
+import { useUIStore } from "./store/uiStore";
 
 function App() {
+   const initTheme = useUIStore((s) => s.initTheme);
+
+  useEffect(() => {
+    initTheme();
+  }, []);
   return (
-    <Router>
       <Routes>
         {/* Public */}
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<ChatSmart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
@@ -30,11 +33,10 @@ function App() {
             <Route path="mindMap" element={<MindMap />} />
             <Route path="settings" element={<Settings />} />
             <Route path="uploadNotes" element={<UploadNotes />} />
-            <Route path="chatSmart" element={<ChatSmart />} />
+            {/* <Route path="chatSmart" element={<ChatSmart />} /> */}
           </Route>
         </Route>
       </Routes>
-    </Router>
   );
 }
 
