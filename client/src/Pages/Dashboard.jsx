@@ -1,27 +1,10 @@
-import { useState } from 'react';
-import { TopBar, SideBar, Footer } from '../Components';
-
 export const Dashboard = () => {
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
-
   return (
-    <div className="min-h-screen flex bg-white dark:bg-zinc-900">
-      {/* Sidebar */}
-      <SideBar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
-
-      {/* Main content wrapper */}
-      <div className="flex-1 flex flex-col md:ml-[264px] transition-all duration-300">
-        {/* TopBar */}
-        <TopBar />
-
-        {/* Main content area */}
-        <main className="flex-1 p-6 bg-gray-300 rounded-2xl bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-gray-100 m-6">
-          <h1 className="text-xl font-semibold">Dashboard</h1>
-        </main>
-
-        {/* Footer */}
-        <Footer />
-      </div>
+    <div className="flex-1">
+      <h1 className="text-2xl font-bold text-zinc-800 dark:text-white">Dashboard</h1>
+      <p className="text-zinc-600 dark:text-zinc-400 mt-4">
+        All your study tools in one place. ougef  u9iutrb792n8pu u09f4e7r8u824  ore i4ty2489bf7n9m20e9,q[0F F29E0 RFN2E4TR8024, ] 🚀
+      </p>
     </div>
   );
 };

@@ -1,15 +1,30 @@
+// src/Layouts/DashboardLayout.jsx
+import { useResponsiveSidebar } from '../hooks/useResponsiveSideBar';
+import { SideBar, TopBar, Footer } from '../Components';
 import { Outlet } from 'react-router-dom';
 
-export default function DashboardLayout() {
+function DashboardLayout() {
+  useResponsiveSidebar();
+
   return (
-    <div className="flex h-screen bg-zinc-900 text-white">
-      <aside className="w-64 bg-zinc-800 p-4">Sidebar</aside>
-      <main className="flex-1 flex flex-col">
-        <header className="bg-zinc-700 p-4">Topbar</header>
-        <section className="flex-1 overflow-y-auto p-4">
+    <div className="min-h-screen flex bg-white dark:bg-zinc-900 overflow-x-hidden">
+      {/* Sidebar Always Present */}
+      <SideBar />
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col md:ml-[264px]">
+        {/* Top Bar */}
+        <TopBar />
+
+        {/* Page Content */}
+        <main className="flex-1 px-4 sm:px-6 py-6 bg-zinc-100 dark:bg-zinc-900 overflow-y-auto">
           <Outlet />
-        </section>
-      </main>
+        </main>
+
+        <Footer />
+      </div>
     </div>
   );
 }
+
+export default DashboardLayout;

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import ProtectedLayout from './layouts/ProtectedLayout';
-import DashboardLayout from './layouts/DashboardLayout';
+import ProtectedLayout from './Layouts/ProtectedLayout';
+import DashboardLayout from './Layouts/DashboardLayout';
 import {
   Dashboard, ChatSmart, GoalBreakdown,
   JournalToughts, MemoryZone, MindMap,
@@ -19,12 +19,12 @@ function App() {
   return (
       <Routes>
         {/* Public */}
-        <Route path="/" element={<ChatSmart />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
         {/* Protected */}
-        <Route path="/app" element={<ProtectedLayout />}>
+        {/* <Route path="/app" element={<ProtectedLayout />}> */}
           <Route element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="goalBreakdown" element={<GoalBreakdown />} />
@@ -33,9 +33,9 @@ function App() {
             <Route path="mindMap" element={<MindMap />} />
             <Route path="settings" element={<Settings />} />
             <Route path="uploadNotes" element={<UploadNotes />} />
-            {/* <Route path="chatSmart" element={<ChatSmart />} /> */}
+            <Route path="chatSmart" element={<ChatSmart />} />
           </Route>
-        </Route>
+        {/* </Route> */}
       </Routes>
   );
 }

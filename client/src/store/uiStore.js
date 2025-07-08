@@ -18,5 +18,13 @@ export const useUIStore = create((set) => ({
       localStorage.setItem('theme', newTheme);
       return { theme: newTheme };
     }),
+
+  openSidebar: () => set({ isSidebarOpen: true }),
+  closeSidebar: () => set({ isSidebarOpen: false }),
+  toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+
+  toggleTopbar: () => set((state) => ({ isTopbarVisible: !state.isTopbarVisible })),
+  showTopbar: () => set({ isTopbarVisible: true }),
+  hideTopbar: () => set({ isTopbarVisible: false }),
 }));
 

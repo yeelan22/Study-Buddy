@@ -5,13 +5,15 @@ export function MessageBubble({ message }) {
 
   return (
     <motion.div
-      initial={{ y: 10, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      className={`max-w-[70%] px-4 py-2 my-2 rounded-lg ${
-        isUser
-          ? 'ml-auto bg-blue text-white'
-          : 'mr-auto bg-zinc-200 dark:bg-zinc-700 dark:text-white'
-      }`}
+      initial={{ y: 20, opacity: 0, scale: 0.95 }}
+      animate={{ y: 0, opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+      className={`
+        my-2 px-4 py-3 rounded-xl max-w-[70%] 
+        ${isUser ? 'ml-auto bg-blue text-white' 
+                 : 'mr-auto bg-white/30 text-zinc-800 dark:bg-white/10 dark:text-white'}
+        backdrop-blur-lg shadow-md shadow-zinc-200/40 dark:shadow-zinc-800/50
+      `}
     >
       {message.content}
     </motion.div>

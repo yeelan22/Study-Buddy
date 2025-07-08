@@ -7,6 +7,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: "Inter", sans-serif;
+    overflow-x: hidden;
 }
 
 @theme {
@@ -17,6 +18,9 @@ body {
     --color-emerald: #10b981;
     --color-rose: #f43f5e;
     --color-white: #f8fafc;
+
+    --zinc-50: #f8fafc,
+    --zinc-800: #1e293b,
 
     /* Fonts */
     --sans: "Inter", sans-serif;
@@ -29,4 +33,20 @@ body {
         max-width: 1200px;
         margin: 0 auto;
     }
+    .boxShadow{
+        glass: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+    }
+}
+
+
+/* globals.css or index.css */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(107, 114, 128, 0.5);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
 }
