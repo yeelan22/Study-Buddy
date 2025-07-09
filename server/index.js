@@ -1,11 +1,23 @@
-const express = require('express');
-const cors = require('cors');
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+import chatRoutes from './routes/chat.js';
+import authRoutes from './routes/auth.js';
+
+dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => res.send('API Running'));
+app.use('/api/chat', chatRoutes);
+app.use('/api/auth', authRoutes);
 
-app.listen(PORT, () => console.log(`Server on http://localhost:${PORT}`));
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log('MongoDB connected');
+    app.listen(process.env.PORT, () => console.log(`Server running on ${process.env.PORT}`));
+  })
+  .catch((err) => console.error('Mongo error', err));
+
