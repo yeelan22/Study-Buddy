@@ -1,13 +1,15 @@
-// src/Pages/ChatSmart.jsx
-import { ChatHeader, ChatContainer, ChatInput } from '../Components';
-import robot from '../assets/robot.png';
-import { useState } from 'react';
+import { ChatHeader, ChatInput, ChatContainer } from '../Components';
+import { useState, useRef, useEffect } from 'react';
+import robotAvatar from '../assets/robot.png';
+import { useUIStore } from '../store/uiStore';
 
 export function ChatSmart() {
   const [messages, setMessages] = useState([
     { role: 'assistant', content: 'Hey! How can I help you today?' }
   ]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const containerEndRef = useRef(null);
 
   const sendMessage = async (text) => {
     const newMessages = [...messages, { role: 'user', content: text }];
@@ -23,38 +25,72 @@ export function ChatSmart() {
 
       const data = await res.json();
       const botReply = data.choices?.[0]?.message;
-
       setMessages([...newMessages, botReply]);
     } catch {
-      setMessages([...newMessages, { role: 'assistant', content: 'Something went wrong 🤖' }]);
+      setMessages([
+        ...newMessages,
+        { role: 'assistant', content: 'Something went wrong 🤖' },
+      ]);
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Auto scroll into view
+  useEffect(() => {
+    if (containerEndRef.current) {
+      containerEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+  }, [messages]);
+
+  const theme = useUIStore((state) => state.theme);
+
   return (
-    <div className="flex flex-1 h-full overflow-hidden md:flex-row  max-w-full rounded-xl">
-      {/* Chat Area */}
-      <div className="flex-1 flex flex-col">
+    <div className="relative w-full h-[calc(100vh-80px)] p-4 rounded-2xl overflow-hidden flex text-[15px]">
+      {/* Chat Layout */}
+      <div className="relative flex flex-col flex-1 h-full overflow-hidden glass rounded-2xl z-0 shadow-xl">
+
+        {/* 🌫️ Header */}
         <ChatHeader />
-        <ChatContainer messages={messages} />
-        <ChatInput onSend={sendMessage} />
+
+        {/* 🤖 Robot Background */}
+        <div className="absolute inset-0 pointer-events-none flex justify-center items-center opacity-20 z-0">
+          <img src={robotAvatar} alt="robot-bg" className="w-[320px] h-auto object-contain" />
+        </div>
+
+        {/* 📱 Chat content scrollable */}
+        <div className="relative flex-1 overflow-y-auto px-4 pt-6 pb-8 custom-scrollbar z-10">
+          <ChatContainer messages={messages} />
+          <div ref={containerEndRef} />
+        </div>
+
+        {/* 🧠 Input (Sticky to Chat Area Only) */}
+          <ChatInput onSend={sendMessage} />
+
+        {/* 🤖 Loading Bounce (at reply zone) */}
+        {isLoading && (
+          <img
+            src={robotAvatar}
+            alt="bot-thinking"
+            className="absolute left-8 bottom-28 h-10 w-10 animate-bounce z-30 opacity-90"
+          />
+        )}
       </div>
 
-      {/* Static Right Chat Sidebar */}
-      <aside className="hidden lg:flex flex-col w-[280px] min-w-[280px] shrink-0 border-l border-zinc-200 dark:border-zinc-700 px-4 py-6">
-        <h3 className="text-lg font-semibold mb-4">Recent Chats</h3>
-        <div className="text-sm space-y-4">
+      {/* 📜 Chat History Sidebar (Fixed) */}
+      <aside className={`hidden lg:flex flex-col w-[280px] shrink-0 p-6 ml-4 rounded-3xl  h-full z-20 glass`}>
+        <h3 className="text-lg font-semibold mb-4 text-zinc-800 dark:text-white">Recent Chats</h3>
+        <div className="text-sm space-y-4 text-zinc-700 dark:text-zinc-200">
           <div>
-            <p className="text-zinc-500 dark:text-zinc-400">Today</p>
-            <ul className="ml-4 mt-1 space-y-1 text-zinc-800 dark:text-white">
+            <p className="text-xs text-zinc-500">Today</p>
+            <ul className="ml-3 mt-1 space-y-1">
               <li>- Study Assistant</li>
               <li>- Morning Journal 🌞</li>
             </ul>
           </div>
           <div>
-            <p className="text-zinc-500 dark:text-zinc-400 mt-2">Yesterday</p>
-            <ul className="ml-4 mt-1 space-y-1 text-zinc-800 dark:text-white">
+            <p className="text-xs text-zinc-500">Yesterday</p>
+            <ul className="ml-3 mt-1 space-y-1">
               <li>- Project Plan</li>
               <li>- Arabic Vocabulary</li>
             </ul>
@@ -62,13 +98,6 @@ export function ChatSmart() {
         </div>
       </aside>
 
-      {isLoading && (
-        <img
-          src={robot}
-          alt="bot"
-          className="absolute bottom-24 left-4 h-12 w-12 rounded-full animate-bounce z-50"
-        />
-      )}
     </div>
   );
 }

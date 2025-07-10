@@ -1,7 +1,8 @@
-import { MessageBubble } from '../Components';
-export function ChatContainer({ messages = [] }) {
+import { MessageBubble } from './MessageBubble';
+
+export function ChatContainer({ messages }) {
   return (
-    <div className="flex-1 px-6 py-4 overflow-y-auto space-y-1 custom-scrollbar">
+    <div className="space-y-4">
       {messages.map((msg, i) => (
         <MessageBubble key={i} message={msg} />
       ))}

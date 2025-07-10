@@ -2,26 +2,27 @@
 import { useResponsiveSidebar } from '../hooks/useResponsiveSideBar';
 import { SideBar, TopBar, Footer } from '../Components';
 import { Outlet } from 'react-router-dom';
-
+import { useUIStore } from '../store/uiStore';
 function DashboardLayout() {
   useResponsiveSidebar();
 
+  const theme = useUIStore((state) => state.theme);
+
   return (
-    <div className="min-h-screen flex bg-white dark:bg-zinc-900 overflow-x-hidden">
+    <div className={` text-zinc-800 dark:text-white min-h-screen flex  transition-colors ease-in-out duration-300 overflow-hidden ${theme === "dark" ? "bg-charcoal" : "glass-light"} `} >
       {/* Sidebar Always Present */}
       <SideBar />
-
+      
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col md:ml-[264px]">
         {/* Top Bar */}
-        <TopBar />
-
+       
+       <TopBar />
         {/* Page Content */}
-        <main className="flex-1 px-4 sm:px-6 py-6 bg-zinc-100 dark:bg-zinc-900 overflow-y-auto">
+        <main className="w-full flex-1 px-4 sm:px-6 py-2   dark:bg-charcoal overflow-y-hidden">
           <Outlet />
         </main>
-
-        <Footer />
+        
       </div>
     </div>
   );

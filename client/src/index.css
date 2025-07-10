@@ -10,6 +10,10 @@ body {
     overflow-x: hidden;
 }
 
+* {
+  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
 @theme {
     /* Colors */
     --color-charcoal: #0f172a;
@@ -17,7 +21,15 @@ body {
     --color-blue: #3b82f6;
     --color-emerald: #10b981;
     --color-rose: #f43f5e;
-    --color-white: #f8fafc;
+
+    --color-light-1: #f5f7fa; /* Soft base background */
+    --color-light-2: #ffffff; /* Glass card base (used with blur) */
+    --color-light-3: #f1f2f5; /* Sidebar and section backgrounds */
+    --color-light-border: rgba(0, 0, 0, 0.05);
+    --color-text-primary: #1f2937; /* Deep gray, not black */
+    --color-text-secondary: #6b7280;
+    --glass-shadow: 0 6px 26px rgba(0, 0, 0, 0.05);
+
 
     --zinc-50: #f8fafc,
     --zinc-800: #1e293b,
@@ -33,9 +45,6 @@ body {
         max-width: 1200px;
         margin: 0 auto;
     }
-    .boxShadow{
-        glass: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
-    }
 }
 
 
@@ -49,4 +58,24 @@ body {
 }
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
+}
+
+.glass {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+.glass-light {
+  background: rgba(59, 130, 246, 0.25);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--color-light-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.shadow-sm {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }

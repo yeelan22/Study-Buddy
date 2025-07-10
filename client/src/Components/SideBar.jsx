@@ -49,11 +49,11 @@ export const SideBar = () => {
           animate={{ x: 0 }}
           exit={{ x: -260 }}
           transition={{ type: 'spring', stiffness: 100, damping: 18 }}
-          className="w-[240px] max-w-[90vw] h-screen fixed top-4 left-2 md:left-6 
-          z-50 flex flex-col py-6 px-4 rounded-3xl shadow-md
-           bg-white text-zinc-800 dark:bg-charcoal dark:text-white"
+          className={`w-[240px] max-w-[90vw] fixed h-screen mb-12 top-4 left-2 md:left-6 
+          z-50 flex flex-col py-6 px-4 rounded-3xl shadow-xl bottom-4
+          ` + (theme === 'dark' ? 'glass border-transparent' : 'glass')}
         >
-          <div className="flex items-center gap-3 mb-10">
+          <div className="flex items-center gap-3 mb-10 ">
             <img src={theme === 'dark' ? Dlogo : Llogo} alt="Neuro Logo" className="w-8 h-8" />
             <span className="text-xl font-semibold">Neuro-Note</span>
           </div>
@@ -67,8 +67,8 @@ export const SideBar = () => {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-4 py-2 rounded-xl transition-all duration-300 
                    ${isActive
-                     ? 'bg-white text-charcoal font-semibold shadow-md dark:bg-white dark:text-charcoal'
-                     : 'hover:bg-charcoal hover:text-white dark:hover:text-zinc-gray dark:hover:bg-white'}`
+                     ? 'bg-blue text-white font-semibold shadow-md'
+                     : 'hover:bg-charcoal hover:text-white dark:hover:text-zinc-gray dark:hover:bg-white '}`
                 }
               >
                 <Icon className="w-5 h-5" />
@@ -85,7 +85,7 @@ export const SideBar = () => {
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-4 py-2 rounded-xl transition-all duration-300 
                     ${isActive
-                      ? 'bg-white text-charcoal font-semibold shadow-md dark:bg-white dark:text-charcoal'
+                      ? ' text-charcoal font-semibold shadow-md dark:bg-white dark:text-charcoal'
                       : 'hover:bg-charcoal hover:text-white dark:hover:text-zinc-gray dark:hover:bg-white'}`
                   }
                 >

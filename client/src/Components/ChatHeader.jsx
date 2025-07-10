@@ -1,7 +1,7 @@
 export function ChatHeader() {
   return (
-    <div className="px-6 py-4 border-b dark:border-zinc-700 flex items-center justify-between">
-      <h1 className="text-lg font-semibold">🤖 Chat Smart</h1>
-    </div>
+    <header className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-700  shadow-sm">
+      <h1 className="text-xl font-bold text-zinc-gray dark:text-white">Chat Smart</h1>
+    </header>
   );
 }
