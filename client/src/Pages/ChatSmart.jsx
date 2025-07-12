@@ -1,7 +1,7 @@
 import { ChatHeader, ChatInput, ChatContainer } from '../Components';
 import { useState, useRef, useEffect } from 'react';
 import robotAvatar from '../assets/robot.png';
-import { useUIStore } from '../store/uiStore';
+import { useNoteStore } from '../store/noteStore';
 
 export function ChatSmart() {
   const [messages, setMessages] = useState([
@@ -43,8 +43,7 @@ export function ChatSmart() {
     }
   }, [messages]);
 
-  const theme = useUIStore((state) => state.theme);
-
+  const notes = useNoteStore((state) => state.notes);
   return (
     <div className="relative w-full h-[calc(100vh-80px)] p-4 rounded-2xl overflow-hidden flex text-[15px]">
       {/* Chat Layout */}

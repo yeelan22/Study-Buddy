@@ -1,15 +1,18 @@
-import { useUserStore } from '../store/userStore'; // adjust path if needed
+import { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useUserStore } from '../store/userStore';
+
 export function Register() {
   const [data, setData] = useState({ name: '', email: '', password: '', avatar: '' });
   const navigate = useNavigate();
-  const setUser = useUserStore((state) => state.setUser); // ✅
+  const setUser = useUserStore((s) => s.setUser);
 
   const handleChange = (e) => {
     if (e.target.name === 'avatar') {
       const file = e.target.files[0];
       const reader = new FileReader();
-      reader.onloadend = () => setData({ ...data, avatar: reader.result });
+      reader.onloadend = () => setData((prev) => ({ ...prev, avatar: reader.result }));
       reader.readAsDataURL(file);
     } else {
       setData({ ...data, [e.target.name]: e.target.value });
@@ -20,11 +23,9 @@ export function Register() {
     e.preventDefault();
     try {
       const res = await axios.post('http://localhost:5001/api/auth/register', data);
-      localStorage.setItem('user', JSON.stringify(res.data));
-      setUser(res.data.user); // ✅ Sync with Zustand
+      setUser(res.data.user); // ✅ set Zustand state only
       navigate('/app/dashboard');
     } catch (err) {
-      console.error(err.response?.data || err.message);
       alert(err.response?.data?.error || 'Registration failed');
     }
   };
