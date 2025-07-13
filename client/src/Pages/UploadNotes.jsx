@@ -1,5 +1,6 @@
+// UploadNotes.jsx
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../utils/axiosInstance'; // ✅ Use axiosInstance containing headers
 import { useUserStore } from '../store/userStore';
 import { useNoteStore } from '../store/noteStore';
 
@@ -10,37 +11,32 @@ export function UploadNotes() {
 
   const user = useUserStore((s) => s.user);
   const userId = user?._id;
-  console.log("Current User ID:", userId);
   const { notes, setNotes, addNote } = useNoteStore();
 
-  // ⬇️ Load user notes on first render
   useEffect(() => {
     if (!userId) return;
 
-    axios.get(`http://localhost:5001/api/notes/${userId}`)
-      .then(res => {setNotes(res.data)
-        console.log("Current User ID:", userId);
-      })
+    axios.get(`/notes/${userId}`)
+      .then(res => setNotes(res.data))
       .catch(err => console.error("Failed to load notes", err));
   }, [userId]);
 
-  // ⬆️ Handle upload
   const handleUpload = async () => {
-    if (!file || !userId) return alert("You must be logged in and select a file.");
+    if (!file) return alert("Please select a file to upload.");
+
     setUploading(true);
-    console.log("Current User ID:", userId);
 
     const formData = new FormData();
     formData.append('note', file);
-    formData.append('userId', userId);
+    // ❌ DO NOT send userId — the token takes care of that.
 
     try {
-      const res = await axios.post('http://localhost:5001/api/upload', formData);
+      const res = await axios.post('/upload', formData);
       setNote(res.data);
-      addNote(res.data); // store it
+      addNote(res.data);
     } catch (err) {
-      console.error(err);
-      alert('Upload failed');
+      console.error('Upload failed:', err);
+      alert(err?.response?.data?.error || 'Upload failed');
     } finally {
       setUploading(false);
     }

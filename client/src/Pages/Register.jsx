@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../store/userStore';
+import axios from '../utils/axiosInstance';
 
 export function Register() {
   const [data, setData] = useState({ name: '', email: '', password: '', avatar: '' });
@@ -22,8 +22,8 @@ export function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5001/api/auth/register', data);
-      setUser(res.data.user); // ✅ set Zustand state only
+      const res = await axios.post('/auth/register', data);
+      setUser(res.data.user, res.data.token);
       navigate('/app/dashboard');
     } catch (err) {
       alert(err.response?.data?.error || 'Registration failed');
