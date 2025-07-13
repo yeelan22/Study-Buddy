@@ -27,6 +27,8 @@ export async function processNoteForRAG(noteText, noteId, userId) {
       embeddings: [embedding],
       metadatas: [{ userId, noteId, chunkIndex: i }],
     });
+
+      console.log(`✅ Chunk ${i} stored in Chroma`, chunk.slice(0, 50), '...');
   }
 
   return chunks.length;

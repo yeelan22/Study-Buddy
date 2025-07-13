@@ -5,9 +5,19 @@ const noteSchema = new mongoose.Schema({
   filetype: String,
   filepath: String,
   extractedText: String,
-  hash: { type: String, unique: true },
-  userId: { type: String, required: true }, // ✅ Added
-  uploadedAt: { type: Date, default: Date.now },
+  hash: String,
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  uploadedAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
+
+// ✅ FIXED: Unique per file **per user**
+noteSchema.index({ hash: 1, userId: 1 }, { unique: true });
 
 export default mongoose.model('Note', noteSchema);

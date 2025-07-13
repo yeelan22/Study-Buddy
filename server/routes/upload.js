@@ -1,19 +1,25 @@
+// routes/upload.js
 import express from 'express';
 import fs from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
-import { processNoteForRAG } from '../utils/EmbedAndStore.js';
 
+import { processNoteForRAG } from '../utils/EmbedAndStore.js';
 import upload from '../middleware/upload.js';
 import { extractTextFromPDF, extractTextFromDocx, extractTextFromImage } from '../utils/analyzeFile.js';
 import Note from '../models/note.js';
+import { authenticate } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.post('/', upload.single('note'), async (req, res) => {
+/**
+ * POST /api/upload
+ * Auth-protected route to receive file uploads
+ */
+router.post('/', authenticate, upload.single('note'), async (req, res) => {
   try {
-    const { userId } = req.body;
     const file = req.file;
+    const userId = req.userId; // ✅ From token, NOT the body — much safer
     if (!file || !userId) return res.status(400).json({ error: 'No file or user ID' });
 
     const buffer = await fs.readFile(file.path);
@@ -47,7 +53,7 @@ router.post('/', upload.single('note'), async (req, res) => {
       filepath: file.path,
       extractedText,
       hash,
-      userId, // ✅ Save
+      userId, // ✅ Save to DB
     });
 
     await processNoteForRAG(extractedText, note._id.toString(), userId);
