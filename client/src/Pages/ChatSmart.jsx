@@ -1,85 +1,135 @@
 import { useState, useRef, useEffect } from 'react';
 import { useUserStore } from '../store/userStore';
 import axios from '../utils/axiosInstance';
-import { ChatHeader, ChatInput, ChatContainer } from '../Components';
+import { ChatInput } from '../Components';
 import robotAvatar from '../assets/robot.png';
+import { MessageBubble } from '../Components/MessageBubble';
 
 export function ChatSmart() {
   const [messages, setMessages] = useState([]);
+  const [chatList, setChatList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentChatId, setCurrentChatId] = useState(null);
   const containerEndRef = useRef(null);
   const { user, token } = useUserStore();
 
-  // 🧠 Load latest chat history if logged in
+  // 🔄 Fetch chat list and latest chat
   useEffect(() => {
     if (!user || !token) return;
 
-    const fetchChatHistory = async () => {
+    const fetchChatList = async () => {
       try {
-        const res = await axios.get('/chat/history/latest', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const res = await axios.get('/chat/history/all', {
+          headers: { Authorization: `Bearer ${token}` },
         });
-        if (res.data && res.data.chat) {
-          setMessages(res.data.chat.messages);
-          setCurrentChatId(res.data.chat._id);
+
+        setChatList(res.data.chats || []);
+
+        if (res.data.chats.length > 0) {
+          const latest = res.data.chats[0];
+          const fullChat = await axios.get(`/chat/${latest._id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setMessages(fullChat.data.chat?.messages || []);
+          setCurrentChatId(latest._id);
         }
       } catch (err) {
-        console.error('Error fetching chat history:', err);
+        console.error('Error fetching chat list:', err);
       }
     };
 
-    fetchChatHistory();
+    fetchChatList();
   }, [user, token]);
 
-  const sendMessage = async (text) => {
-  const newMessages = [...messages, { role: 'user', content: text }];
-  setMessages(newMessages);
-  setIsLoading(true);
+  // ➕ Start new chat
+  const handleNewChat = async () => {
+    try {
+      const res = await axios.post('/chat/new', {}, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-  try {
-    const res = await axios.post(
-      '/rag', // changed from '/chat'
-      { query: text }, // only send the user query to RAG
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      if (res.data?.chatId) {
+        setMessages([]);
+        setCurrentChatId(res.data.chatId);
+
+        const updated = await axios.get('/chat/history/all', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setChatList(updated.data.chats || []);
       }
-    );
+    } catch (err) {
+      console.error('Error creating new chat:', err);
+    }
+  };
 
-    // RAG returns { role, content } message directly
-    setMessages([...newMessages, res.data]);
-  } catch (err) {
-    console.error(err);
-    setMessages([
-      ...newMessages,
-      { role: 'assistant', content: 'Something went wrong 🤖' },
-    ]);
-  } finally {
-    setIsLoading(false);
-  }
-};
+  // ✉️ Send user message to RAG system
+  const sendMessage = async (text) => {
+    const newMessages = [...messages, { role: 'user', content: text }];
+    setMessages(newMessages);
+    setIsLoading(true);
 
+    try {
+      const res = await axios.post('/rag', {
+        query: text,
+        chatId: currentChatId,
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const { reply, chatId } = res.data;
+
+      setMessages([...newMessages, reply]);
+      setCurrentChatId(chatId);
+
+      setChatList(prev =>
+        prev.map(chat =>
+          chat._id === chatId
+            ? { ...chat, preview: text, updatedAt: new Date().toISOString() }
+            : chat
+        )
+      );
+    } catch (err) {
+      setMessages([
+        ...newMessages,
+        { role: 'assistant', content: 'Something went wrong 🤖' },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Scroll to bottom on new message
   useEffect(() => {
     if (containerEndRef.current) {
-      containerEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      containerEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
 
-  return (
-    <div className="relative w-full h-[calc(100vh-80px)] p-4 rounded-2xl overflow-hidden flex text-[15px]">
-      <div className="relative flex flex-col flex-1 h-full overflow-hidden glass rounded-2xl z-0 shadow-xl">
-        <ChatHeader />
+  // 📦 Load previous chat
+  const loadChat = async (chatId) => {
+    try {
+      const res = await axios.get(`/chat/${chatId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setMessages(res.data.chat?.messages || []);
+      setCurrentChatId(chatId);
+    } catch (err) {
+      console.error('Error loading chat:', err);
+    }
+  };
 
-        <div className="absolute inset-0 pointer-events-none flex justify-center items-center opacity-20 z-0">
-          <img src={robotAvatar} alt="robot-bg" className="w-[320px] h-auto object-contain" />
+  return (
+    <div className="relative w-full h-[calc(100vh-160px)] flex flex-col md:flex-row gap-6">
+      {/* Chat box */}
+      <div className="relative flex-1 overflow-hidden flex flex-col">
+        <div className="absolute inset-0 pointer-events-none flex justify-center items-start opacity-10 z-0">
+          <img src={robotAvatar} alt="robot" className="w-[300px] h-auto object-contain" />
         </div>
 
-        <div className="relative flex-1 overflow-y-auto px-4 pt-6 pb-8 custom-scrollbar z-10">
-          <ChatContainer messages={messages} />
+        <div className="flex-1 overflow-y-auto bg-transparent px-6 pt-6 pb-8 custom-scrollbar z-10">
+          <div className="space-y-4">
+            {messages.map((msg, i) => <MessageBubble key={i} message={msg} />)}
+          </div>
           <div ref={containerEndRef} />
         </div>
 
@@ -93,6 +143,30 @@ export function ChatSmart() {
           />
         )}
       </div>
+
+      {/* Sidebar */}
+      <aside className="hidden md:flex flex-col w-[215px] rounded-2xl p-4 bg-white/20 dark:bg-black/30 backdrop-blur-lg shadow-md h-full overflow-y-auto">
+        <h3 className="mb-4 text-lg font-semibold text-zinc-700 dark:text-white">Chat History</h3>
+
+        <button
+          onClick={handleNewChat}
+          className="text-sm font-medium text-blue-600 hover:underline mb-3"
+        >
+          + New Chat
+        </button>
+
+        <ul className="space-y-2 text-sm text-zinc-600 dark:text-zinc-300">
+          {chatList.map((chat) => (
+            <li
+              key={chat._id}
+              onClick={() => loadChat(chat._id)}
+              className="truncate cursor-pointer hover:text-blue-600"
+            >
+              {chat.preview || chat.messages?.[0]?.content || 'Empty Chat'}
+            </li>
+          ))}
+        </ul>
+      </aside>
     </div>
   );
 }

@@ -47,9 +47,9 @@ export const SideBar = () => {
       <aside
         ref={sidebarRef}
         id="sidebar"
-        className={`hidden md:flex flex-col w-[240px] h-screen fixed top-0 left-0 z-30 py-6 px-4 rounded-none ${
-          theme === 'dark' ? 'glass border-transparent' : 'glass'
-        }`}
+         className={`hidden md:flex flex-col w-[240px] h-screen fixed top-0 left-0 z-30 py-6 px-4 rounded-none transition-colors ${
+        theme === 'dark' ? 'glass' : 'bg-transparent  '
+      }`}
       >
         <SidebarContent onLinkClick={() => {}} />
       </aside>
@@ -64,9 +64,9 @@ export const SideBar = () => {
             animate={{ x: 0 }}
             exit={{ x: -260 }}
             transition={{ type: 'spring', stiffness: 100, damping: 18 }}
-            className={`md:hidden w-[240px] fixed h-screen top-0 left-0 z-50 flex flex-col py-6 px-4 shadow-xl glass rounded-r-3xl ${
-              theme === 'dark' ? 'glass border-transparent' : 'glass'
-            }`}
+            className={`md:hidden w-[240px] fixed h-screen top-0 left-0 z-50 flex flex-col py-6 px-4 shadow-xl rounded-r-2xl transition-all ${
+            theme === 'dark' ? 'glass' : 'bg-transparent'
+          }`}
           >
             <SidebarContent onLinkClick={closeSidebar} />
           </motion.aside>

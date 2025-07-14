@@ -16,24 +16,24 @@ export function ChatInput({ onSend }) {
   };
 
   return (
-    <div className="max-w-xl w-full mx-6 mb-2 flex gap-3 items-center">
-      <input
-        ref={inputRef}
-        type="text"
-        placeholder="Type your message..."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-        className="flex-1 rounded-full px-5 py-3 bg-white dark:bg-zinc-800/10 outline-none
-         text-gray-800 dark:text-white placeholder:text-sm placeholder:text-zinc-400 shadow-inner backdrop-blur-md border
-          border-zinc-300"
-      />
-      <button
-        onClick={handleSend}
-        className="bg-blue text-white px-5 py-2 rounded-full hover:scale-[1.03] transition shadow"
-      >
-        Send
-      </button>
-    </div>
+    <div className="w-full px-2 sm:px-4 md:pb-2 pb-4 ">
+  <div className="flex w-full items-center gap-3 rounded-full bg-white dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-700 shadow-sm p-2">
+    <input
+      ref={inputRef}
+      type="text"
+      placeholder="Type your message..."
+      value={text}
+      onChange={(e) => setText(e.target.value)}
+      onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+      className="flex-1 px-4 py-2 text-sm bg-transparent outline-none text-gray-800 dark:text-white placeholder:text-sm placeholder:text-gray-400"
+    />
+    <button
+      onClick={handleSend}
+      className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition"
+    >
+      Send
+    </button>
+  </div>
+</div>
   );
 }

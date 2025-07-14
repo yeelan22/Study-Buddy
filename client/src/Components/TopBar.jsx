@@ -1,28 +1,26 @@
-// src/Components/TopBar.jsx
-import { useState } from 'react';
+import { useState } from 'react'
 import {
   Sun,
   Moon,
   Search,
   SquareChevronRight,
   SquareChevronLeft,
-} from 'lucide-react';
-import profile from '../assets/profile.jpg';
-import { useUIStore } from '../store/uiStore';
-import { NavLink } from 'react-router-dom';
+} from 'lucide-react'
+import profile from '../assets/profile.jpg'
+import { useUIStore } from '../store/uiStore'
+import { NavLink } from 'react-router-dom'
 
 export const TopBar = () => {
-  const [searchValue, setSearchValue] = useState('');
-  const toggleTheme = useUIStore((state) => state.toggleTheme);
-  const isDarkMode = useUIStore((state) => state.theme === 'dark');
-  const toggleSidebar = useUIStore((state) => state.toggleSidebar);
-  const isSidebarOpen = useUIStore((state) => state.isSidebarOpen);
+  const [searchValue, setSearchValue] = useState('')
+  const toggleTheme = useUIStore((state) => state.toggleTheme)
+  const isDarkMode = useUIStore((state) => state.theme === 'dark')
+  const toggleSidebar = useUIStore((state) => state.toggleSidebar)
+  const isSidebarOpen = useUIStore((state) => state.isSidebarOpen)
 
   return (
-    <header className="bg-transparent fixed top-0 w-full z-40 border-b dark:border-zinc-700 border-zinc-200 px-4 sm:px-6 py-2 backdrop-blur-md">
+    <header className="w-full z-10 rounded-xl py-3 px-2 sm:px-4 bg-transparent ">
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-3">
-          {/* Sidebar toggle */}
           <button onClick={toggleSidebar} className="md:hidden p-2">
             {isSidebarOpen ? (
               <SquareChevronLeft className="w-6 h-6" />
@@ -45,7 +43,6 @@ export const TopBar = () => {
         </NavLink>
 
         <div className="flex items-center gap-2 md:gap-4">
-          {/* Full Search */}
           <div className="hidden md:block relative">
             <input
               type="text"
@@ -57,7 +54,6 @@ export const TopBar = () => {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 dark:text-zinc-400" />
           </div>
 
-          {/* Mobile Search */}
           <button className="md:hidden p-2 rounded-full bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 dark:hover:bg-zinc-600">
             <Search className="w-5 h-5" />
           </button>
@@ -71,5 +67,5 @@ export const TopBar = () => {
         </div>
       </div>
     </header>
-  );
-};
+  )
+}
