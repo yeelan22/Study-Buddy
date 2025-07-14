@@ -10,7 +10,7 @@ function DashboardLayout() {
 
   return (
     <div
-      className={`text-zinc-800 bg-gradient-to-tl from-[#f8fafd] via-[#eef1fb] to-[#e1e6ff]   dark:from-[#1e1e2d] dark:via-[#2a2a38] dark:to-[#1a1a26] dark:text-white min-h-screen flex transition-colors ease-in-out duration-300`}
+      className={`text-zinc-800 bg-gradient-to-tl from-[#e1e6ff] via-[#eef1fb] to-[#e1e6ff]   dark:from-[#1e1e2d] dark:via-[#2a2a38] dark:to-[#1a1a26] dark:text-white min-h-screen flex transition-colors ease-in-out duration-300`}
     >
       {/* Fixed Sidebar */}
       <div className="fixed top-0 left-0 h-full z-50">

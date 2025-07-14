@@ -92,3 +92,63 @@ body {
 .shadow-sm {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
+
+
+.memoryzone-grid {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* Medium screens: 2 columns, 4 rows */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .memoryzone-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 200px 150px 150px 150px;
+    gap: 20px;
+    grid-template-areas:
+      "calendar flashcards"
+      "torevise flashcards"
+      "stats quote"
+      "forgotten revising";
+    min-width: 0;
+    max-width: 800px;
+  }
+  .area-calendar { grid-area: calendar; }
+  .area-flashcards { grid-area: flashcards; }
+  .area-torevise { grid-area: torevise; }
+  .area-stats { grid-area: stats; }
+  .area-quote { grid-area: quote; }
+  .area-forgotten { grid-area: forgotten; }
+  .area-revising { grid-area: revising; }
+}
+
+/* Large screens: your custom grid */
+@media (min-width: 1024px) {
+  .memoryzone-grid {
+    display: grid !important;
+    grid-template-columns: 1.1fr 1.7fr 1.1fr 1.1fr;
+    grid-template-rows: 270px 150px 150px;
+    gap: 24px;
+    grid-template-areas:
+      "calendar flashcards flashcards torevise"
+      "calendar stats quote torevise"
+      "calendar stats forgotten revising";
+    min-width: 0;
+    max-width: 1100px;
+    min-height: 700px;
+  }
+  .area-calendar { grid-area: calendar; }
+  .area-flashcards { grid-area: flashcards; }
+  .area-torevise { 
+    grid-area: torevise;
+    grid-row: 1 / span 2 !important;
+    height: 100%;
+  }
+  .area-stats { grid-area: stats; }
+  .area-quote { grid-area: quote; }
+  .area-forgotten { grid-area: forgotten; }
+  .area-revising { grid-area: revising; }
+}
