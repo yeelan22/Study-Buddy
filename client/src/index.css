@@ -102,19 +102,19 @@ body {
 }
 
 /* Medium screens: 2 columns, 4 rows */
-@media (min-width: 768px) and (max-width: 1023px) {
+@media (min-width: 720px) and (max-width: 1044px) {
   .memoryzone-grid {
     display: grid !important;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 200px 150px 150px 150px;
-    gap: 20px;
+    grid-template-rows: 200px 150px 150px 150px 150px;
+    gap:8px;
     grid-template-areas:
       "calendar flashcards"
       "torevise flashcards"
       "stats quote"
       "forgotten revising";
     min-width: 0;
-    max-width: 800px;
+    max-width: 860px;
   }
   .area-calendar { grid-area: calendar; }
   .area-flashcards { grid-area: flashcards; }
@@ -126,16 +126,16 @@ body {
 }
 
 /* Large screens: your custom grid */
-@media (min-width: 1024px) {
+@media (min-width: 1044px) {
   .memoryzone-grid {
     display: grid !important;
-    grid-template-columns: 1.1fr 1.7fr 1.1fr 1.1fr;
-    grid-template-rows: 270px 150px 150px;
-    gap: 24px;
+    grid-template-columns: 1.1fr 1fr 1.1fr 1.1fr;
+    grid-template-rows: 280px 150px 150px;
+    gap: 12px;
     grid-template-areas:
-      "calendar flashcards flashcards torevise"
-      "calendar stats quote torevise"
-      "calendar stats forgotten revising";
+      "torevise flashcards flashcards calendar"
+      "torevise stats quote calendar"
+      "torevise stats forgotten revising";
     min-width: 0;
     max-width: 1100px;
     min-height: 700px;

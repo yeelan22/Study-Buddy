@@ -1,3 +1,4 @@
+// src/Components/TopBar.jsx
 import { useState } from 'react'
 import {
   Sun,
@@ -21,6 +22,7 @@ export const TopBar = () => {
     <header className="w-full z-10 rounded-xl py-3 px-2 sm:px-4 bg-transparent ">
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-3">
+          {/* Mobile sidebar toggle */}
           <button onClick={toggleSidebar} className="md:hidden p-2">
             {isSidebarOpen ? (
               <SquareChevronLeft className="w-6 h-6" />
@@ -30,9 +32,9 @@ export const TopBar = () => {
           </button>
 
           <img src={profile} className="w-12 rounded-full hidden md:block" alt="" />
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <p className="font-medium leading-none">Chaimae Ouhdane</p>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 ">
               Today is a great day to conquer your goals 🌟
             </p>
           </div>

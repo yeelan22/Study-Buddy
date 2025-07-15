@@ -14,8 +14,14 @@ export const MemoryZoneGrid = () => (
     <div className="area-calendar">
       <CalendarBox />
     </div>
-    <div className="area-flashcards">
-      <FlashcardsBox />
+    <div className="area-flashcards relative">
+        <FlashcardsBox
+          autoplay={true}
+          autoplayDelay={3000}
+          pauseOnHover={true}
+          loop={true}
+          round={false}
+        />
     </div>
     <div className="area-torevise">
       <ToReviseListBox />
