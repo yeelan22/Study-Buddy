@@ -1,51 +1,79 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
-const notesData = [
-  {
-    title: "Literature",
-    subtopics: ["model verbs", "adverbs"],
-  },
-  {
-    title: "World History",
-    subtopics: ["Renaissance", "World Wars"],
-  },
-];
+export function ToReviseListBox({
+  notes,
+  schedule = [],
+  selectedCategory,
+  setSelectedCategory,
+  setSelectedNote,
+}) {
+  const [openIdx, setOpenIdx] = useState(null);
+  const categories = Object.keys(notes || {});
 
-export function ToReviseListBox() {
+  const handleMainClick = (idx) => {
+    const cat = categories[idx];
+    setSelectedCategory(cat);
+    setOpenIdx(openIdx === idx ? null : idx);
+  };
+
+  const handleSubClick = (mainIdx, subIdx) => {
+    const cat = categories[mainIdx];
+    const notesInCat = notes[cat];
+    const selected = notesInCat[subIdx];
+    setSelectedNote(selected);
+  };
+
+  const timelineData = categories.map((cat) => ({
+    title: cat,
+    subtopics: Array.isArray(notes[cat])
+      ? notes[cat].map((note) => note.title || note.filename)
+      : [],
+  }));
+
   return (
-    <div className="bg-[#18192A] text-white rounded-2xl shadow flex flex-col gap-6 p-6 lg:h-[520px] h-full w-full max-w-md">
+    <div className="bg-white dark:bg-charcoal rounded-2xl shadow flex flex-col gap-6 p-6 h-full w-full max-w-md">
       <div>
         <h3 className="text-lg font-semibold mb-4">All Notes</h3>
-        <Timeline notes={notesData} />
+        <Timeline
+          notes={timelineData}
+          openIdx={openIdx}
+          handleMainClick={handleMainClick}
+          handleSubClick={handleSubClick}
+        />
       </div>
-      {/* Recall Schedule (untouched) */}
+
+      {/* ✅ Updated Recall Schedule Section */}
       <div>
-        <h3 className="text-lg font-semibold mb-2">Recall Schedule</h3>
+        <h3 className="text-lg font-semibold mb-2">📅 Recall Schedule</h3>
         <ul className="space-y-2">
-          <li className="flex justify-between bg-[#23243a] rounded-lg px-4 py-2">
-            <span>Biology</span>
-            <span className="text-gray-400 text-sm">Tomorrow</span>
-          </li>
-          <li className="flex justify-between bg-[#23243a] rounded-lg px-4 py-2">
-            <span>Physics</span>
-            <span className="text-gray-400 text-sm">Aug 21</span>
-          </li>
-          <li className="flex justify-between bg-[#23243a] rounded-lg px-4 py-2">
-            <span>Literature</span>
-            <span className="text-gray-400 text-sm">Aug 23</span>
-          </li>
+          {schedule.length === 0 ? (
+            <p className="text-sm text-gray-400">No scheduled sessions yet</p>
+          ) : (
+            schedule.map((s) => (
+              <li
+                key={s.noteId}
+                className="flex justify-between items-center bg-[#23243a] px-4 py-2 rounded-lg cursor-pointer hover:bg-[#2e2e4a]"
+                onClick={() => {
+                  const flatNotes = Object.values(notes).flat();
+                  const matched = flatNotes.find((n) => n._id === s.noteId);
+                  if (matched) setSelectedNote(matched);
+                }}
+              >
+                <span>{s.title}</span>
+                <span className="text-sm text-gray-400">
+                  {new Date(s.nextDue).toLocaleDateString()}
+                </span>
+              </li>
+            ))
+          )}
         </ul>
       </div>
     </div>
   );
 }
 
-
-function Timeline({ notes }) {
-  const [openIdx, setOpenIdx] = useState(null);
-
-  // Build a flat list of items for rendering
+function Timeline({ notes, openIdx, handleMainClick, handleSubClick }) {
   let items = [];
   notes.forEach((note, idx) => {
     items.push({ type: "main", note, idx });
@@ -58,11 +86,10 @@ function Timeline({ notes }) {
 
   return (
     <div className="relative flex flex-col">
-      {/* Vertical line - perfectly centered */}
       <div
         className="absolute top-0 w-1 bg-blue-600 rounded-full"
         style={{
-          left: "28px", // 50% of w-14 (56px) container below
+          left: "28px",
           transform: "translateX(-50%)",
           height: `${items.length * 36 - 8}px`,
           zIndex: 0,
@@ -71,7 +98,6 @@ function Timeline({ notes }) {
       <div className="flex flex-col">
         {items.map((item, i) => (
           <div key={i} className="flex items-center min-h-[36px]">
-            {/* Circles and dots */}
             <div className="w-14 flex justify-center items-center relative z-10">
               {item.type === "main" ? (
                 <motion.div
@@ -86,9 +112,7 @@ function Timeline({ notes }) {
                   }}
                   transition={{ type: "spring", stiffness: 400, damping: 20 }}
                   className="w-6 h-6 bg-blue-600 rounded-full border-2 border-blue-400 cursor-pointer"
-                  onClick={() =>
-                    setOpenIdx(openIdx === item.idx ? null : item.idx)
-                  }
+                  onClick={() => handleMainClick(item.idx)}
                 />
               ) : (
                 <motion.div
@@ -96,27 +120,25 @@ function Timeline({ notes }) {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.5, y: -10 }}
                   transition={{ delay: 0.05 * item.subIdx }}
-                  className="w-4 h-4 bg-blue-400 rounded-full"
+                  className="w-4 h-4 bg-blue-400 rounded-full cursor-pointer"
                 />
               )}
             </div>
-            {/* Text */}
             <div
               className={
                 item.type === "main"
                   ? `text-base font-medium cursor-pointer transition-colors duration-200 ${
                       openIdx === item.idx ? "text-blue-400" : "text-white"
                     }`
-                  : "text-gray-300 text-sm ml-2"
+                  : "text-gray-300 text-sm ml-2 cursor-pointer hover:text-blue-300"
               }
               style={{
                 fontSize: item.type === "main" ? "1.08rem" : undefined,
               }}
               onClick={
                 item.type === "main"
-                  ? () =>
-                      setOpenIdx(openIdx === item.idx ? null : item.idx)
-                  : undefined
+                  ? () => handleMainClick(item.idx)
+                  : () => handleSubClick(item.idx, item.subIdx)
               }
             >
               {item.type === "main" ? item.note.title : item.sub}

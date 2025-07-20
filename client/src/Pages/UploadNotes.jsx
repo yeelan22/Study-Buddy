@@ -12,6 +12,9 @@ export function UploadNotes() {
   const user = useUserStore((s) => s.user);
   const userId = user?._id;
   const { notes, setNotes, addNote } = useNoteStore();
+  const allNotesArray = Object.values(notes).flat();
+
+  console.log(allNotesArray);
 
   useEffect(() => {
     if (!userId) return;
@@ -74,11 +77,11 @@ export function UploadNotes() {
 
       {/* Previous Notes */}
       <h3 className="text-xl font-semibold mb-2">🗂️ Your Uploaded Notes</h3>
-      {notes.length === 0 ? (
-        <p className="text-gray-600 text-sm">No notes uploaded yet.</p>
+      {allNotesArray.length === 0 ? (
+        <p className="text-gray-600 text-sm">No allNotesArray uploaded yet.</p>
       ) : (
         <div className="grid gap-4">
-          {notes.map((note) => (
+          {allNotesArray.map((note) => (
             <div key={note._id} className="bg-gray-100 dark:bg-zinc-800 p-4 rounded shadow">
               <h4 className="font-semibold text-base">📄 {note.filename}</h4>
               <p className="text-xs text-gray-500">{new Date(note.uploadedAt).toLocaleString()}</p>

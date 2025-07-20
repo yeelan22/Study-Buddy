@@ -112,8 +112,8 @@ export const SideBar = () => {
         variants={sidebarVariants}
         animate={sidebarMode}
         initial={false}
-        className={`hidden md:flex flex-col h-screen fixed top-0 left-0 z-30 py-6 px-2 transition-colors
-          ${theme === 'dark' ? 'glass' : 'bg-transparent'}
+        className={`hidden md:flex my-4 mx-3 rounded-3xl flex-col h-screen fixed top-0 left-0 z-30 py-6 px-2 transition-colors
+          ${theme === 'dark' ? '' : ''}
         `}
         style={{ width: sidebarWidth }}
       >
@@ -134,7 +134,7 @@ export const SideBar = () => {
             exit={{ x: -260 }}
             transition={{ type: 'spring', stiffness: 100, damping: 18 }}
             className={`md:hidden w-[240px] fixed h-screen top-0 left-0 z-50 flex flex-col py-6 px-4 shadow-xl rounded-r-2xl transition-all
-              ${theme === 'dark' ? 'glass' : 'bg-white'}
+              ${theme === 'dark' ? '' : 'bg-white'}
             `}
           >
             <SidebarContent

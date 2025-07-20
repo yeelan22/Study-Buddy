@@ -1,42 +1,77 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   CalendarBox,
   FlashcardsBox,
   ToReviseListBox,
   StatsBox,
   QuoteBox,
-  ForgottenNotesBox,
-  RevisingHistoryBox,
 } from '../MemoryZone';
+import { useNoteStore } from '../../store/noteStore';
+import axios from '../../utils/axiosInstance';
 
-export const MemoryZoneGrid = () => (
-  <div className="memoryzone-grid flex flex-col gap-4 w-full px-2 md:px-0 overflow-x-hidden">
-    <div className="area-calendar">
-      <CalendarBox />
-    </div>
-    <div className="area-flashcards relative">
-        <FlashcardsBox
-          autoplay={true}
-          autoplayDelay={3000}
-          pauseOnHover={true}
-          loop={true}
-          round={false}
+export const MemoryZoneGrid = () => {
+  const { notes } = useNoteStore();
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedNote, setSelectedNote] = useState(null);
+  const [schedule, setSchedule] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      const res = await axios.get('/notes/schedule');
+      console.log('Schedule fetched:', res.data);
+      setSchedule(res.data); // array of { noteId, title, nextDue }
+    })();
+  }, []);
+  
+  // handler from FlashcardsBox to update schedule
+  const handleSessionComplete = async (sessionData) => {
+    const res = await axios.post(`/notes/session/${sessionData.noteId}`, sessionData);
+    console.log('Session completed:', res.data);
+    const updated = { noteId: sessionData.noteId, title: sessionData.title, nextDue: res.data.nextDue };
+
+    setSchedule(prev => {
+      const filtered = prev.filter(s => s.noteId !== updated.noteId);
+      return [...filtered, updated];
+    });
+  };
+
+  const filteredSchedule = schedule.filter(s => s.nextDue); // before rendering
+
+  return (
+    <div className="memoryzone-grid">
+      <div className="area-torevise">
+        <ToReviseListBox
+          notes={notes}
+          schedule={filteredSchedule}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          setSelectedNote={setSelectedNote}
         />
+      </div>
+
+      <div className="area-flashcards">
+        <FlashcardsBox
+          cards={(selectedNote?.qa || []).map(card => ({
+            ...card,
+            noteId: selectedNote?._id,
+          }))}
+          onSessionComplete={({ noteId, rating, wrongCount, durationMs }) => 
+            handleSessionComplete({ noteId, title: selectedNote.title, rating, wrongCount, durationMs })
+          }
+        />
+      </div>
+
+      <div className="area-calendar">
+        <CalendarBox schedule={filteredSchedule} />
+      </div>
+
+      <div className="area-quote">
+        <QuoteBox />
+      </div>
+
+      <div className="area-stats">
+        <StatsBox schedule={filteredSchedule} />
+      </div>
     </div>
-    <div className="area-torevise">
-      <ToReviseListBox />
-    </div>
-    <div className="area-stats">
-      <StatsBox />
-    </div>
-    <div className="area-quote">
-      <QuoteBox />
-    </div>
-    <div className="area-forgotten">
-      <ForgottenNotesBox />
-    </div>
-    <div className="area-revising">
-      <RevisingHistoryBox />
-    </div>
-  </div>
-);
+  );
+};

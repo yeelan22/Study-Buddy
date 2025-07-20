@@ -10,20 +10,6 @@ body {
     overflow-x: hidden;
 }
 
-* {
-  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-}
-
-:root {
-  --glass-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  --color-light-1: #f9fafb;
-  --blue: #2563eb;
-}
-
-.glass-light {
-  box-shadow: var(--glass-shadow);
-}
-
 @theme {
     /* Colors */
     --color-charcoal: #0f172a;
@@ -32,16 +18,8 @@ body {
     --color-emerald: #10b981;
     --color-rose: #f43f5e;
 
-    --color-light-1: #f9fafb;
-    --color-light-2: #ffffff;
-    --color-light-3: #f1f5f9;
-    --color-light-border: rgba(0, 0, 0, 0.06);
     --color-text-primary: #1e293b;
-    --color-text-secondary: #6b7280;
 
-
-    --zinc-50: #f8fafc,
-    --zinc-800: #1e293b,
 
     /* Fonts */
     --sans: "Inter", sans-serif;
@@ -57,7 +35,7 @@ body {
 }
 
 
-/* globals.css or index.css */
+/* Custom Scroll Bar for chatSmart page */
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;
 }
@@ -69,86 +47,64 @@ body {
   background: transparent;
 }
 
-/* globals.css or index.css */
-
-.glass {
-  background: rgba(255, 255, 255, 0.2); /* Slight opacity */
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.6); /* Make border more visible */
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-}
-
-.dark .glass {
-  background: rgba(255, 255, 255, 0.06); /* For darker theme glass effect */
-  border: 1px solid rgba(255, 255, 255, 0.15);  
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
-}
 
 
-
-.shadow-sm {
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-}
-
+/* Memory Zone Grid */
 
 .memoryzone-grid {
-  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  grid-template-rows: auto auto auto;
+  gap: 12px;
   width: 100%;
-  max-width: 100%;
   margin: 0 auto;
+  background: none;
+  box-sizing: border-box;
 }
 
-/* Medium screens: 2 columns, 4 rows */
-@media (min-width: 720px) and (max-width: 1044px) {
-  .memoryzone-grid {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 200px 150px 150px 150px 150px;
-    gap:8px;
-    grid-template-areas:
-      "calendar flashcards"
-      "torevise flashcards"
-      "stats quote"
-      "forgotten revising";
-    min-width: 0;
-    max-width: 860px;
-  }
-  .area-calendar { grid-area: calendar; }
-  .area-flashcards { grid-area: flashcards; }
-  .area-torevise { grid-area: torevise; }
-  .area-stats { grid-area: stats; }
-  .area-quote { grid-area: quote; }
-  .area-forgotten { grid-area: forgotten; }
-  .area-revising { grid-area: revising; }
-}
-
-/* Large screens: your custom grid */
+/* Grid areas for desktop */
 @media (min-width: 1044px) {
   .memoryzone-grid {
-    display: grid !important;
-    grid-template-columns: 1.1fr 1fr 1.1fr 1.1fr;
-    grid-template-rows: 280px 150px 150px;
-    gap: 12px;
     grid-template-areas:
-      "torevise flashcards flashcards calendar"
-      "torevise stats quote calendar"
-      "torevise stats forgotten revising";
-    min-width: 0;
-    max-width: 1100px;
-    min-height: 700px;
+      "torevise flashcards calendar"
+      "torevise quote calendar"
+      "stats stats stats";
   }
-  .area-calendar { grid-area: calendar; }
+  .area-torevise { grid-area: torevise; }
   .area-flashcards { grid-area: flashcards; }
-  .area-torevise { 
-    grid-area: torevise;
-    grid-row: 1 / span 2 !important;
-    height: 100%;
-  }
-  .area-stats { grid-area: stats; }
+  .area-calendar { grid-area: calendar; }
   .area-quote { grid-area: quote; }
-  .area-forgotten { grid-area: forgotten; }
-  .area-revising { grid-area: revising; }
+  .area-scheduled { grid-area: scheduled; }
+  .area-stats { grid-area: stats; }
+}
+
+/* Tablet: stack in 2 columns */
+@media (min-width: 720px) and (max-width: 1043px) {
+  .memoryzone-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 180px 100px 120px 120px;
+    grid-template-areas:
+      "torevise flashcards"
+      "calendar calendar"
+      "quote scheduled"
+      "stats stats";
+    max-width: 700px;
+  }
+  .area-torevise { grid-area: torevise; }
+  .area-flashcards { grid-area: flashcards; }
+  .area-calendar { grid-area: calendar; }
+  .area-quote { grid-area: quote; }
+  .area-scheduled { grid-area: scheduled; }
+  .area-stats { grid-area: stats; }
+}
+
+/* Mobile: stack vertically */
+@media (max-width: 719px) {
+  .memoryzone-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 98vw;
+    padding: 0 4px;
+  }
 }
