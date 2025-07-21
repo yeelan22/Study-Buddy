@@ -18,9 +18,10 @@ function DashboardLayout() {
         from-[#3b83f681] 
         via-[#f3e8ff] 
         to-[#3b83f669]
-        dark:from-[#3b83f686] 
-        dark:via-charcoal
-        dark:to-[#3b83f69e]  
+        dark:bg-gradient-to-tl
+        dark:from-charcoal 
+        dark:via-[#3b83f69e]
+        dark:to-charcoal  
         dark:text-white 
         flex transition-colors ease-in-out duration-300`}
      >
@@ -43,7 +44,7 @@ function DashboardLayout() {
         }}
       >
         <div className="w-full h-full md:ml-3 md:px-4 md:py-4">
-          <div className="max-w-[1440px] mx-auto md:rounded-3xl dark:bg-zinc-900/50 dark:backdrop-blur-xl md:border md:border-white/1 md:dark:border-zinc-600 shadow-lg md:p-4 ">
+          <div className="max-w-[1440px] mx-auto md:rounded-3xl glass-container md:p-4 ">
             {/* TopBar inside glass card */}
             <TopBar />
 

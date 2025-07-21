@@ -65,27 +65,29 @@ export function CalendarBox({ schedule = [] }) {
     d.getFullYear() === today.getFullYear();
 
   return (
-    <div className="bg-white  rounded-2xl shadow-2xl p-6 min-w-[320px] mx-auto transition-colors duration-300">
+    <div className=" card card-hover p-6 min-w-[320px] mx-auto transition-colors duration-300">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <button onClick={prevMonth} className="text-zinc-400 hover:text-blue-500 text-2xl font-bold px-2 transition-colors cursor-pointer">
+        <button onClick={prevMonth} className="heading-2 rounded-md p-1 transition-colors cursor-pointer">
           <ChevronLeft />
         </button>
-        <div className="text-center">
+        <div className="text-center p-1 heading-2">
           <div className="text-lg font-extrabold text-zinc-800 dark:text-zinc-100 tracking-wide">
             {new Date(view.year, view.month).toLocaleString('default', { month: 'long' })} {view.year}
           </div>
         </div>
-        <button onClick={nextMonth} className="text-zinc-400 hover:text-blue-500 text-2xl font-bold px-2 transition-colors cursor-pointer">
+        <button onClick={nextMonth} className="heading-2 p-1 transition-colors cursor-pointer">
           <ChevronRight />
         </button>
       </div>
       {/* Days of week */}
+
       <div className="grid grid-cols-7 mb-2">
         {daysShort.map((d, i) => (
           <div key={i} className="text-zinc-400 dark:text-indigo-200 font-bold text-center text-base tracking-wide">{d}</div>
         ))}
       </div>
+
       {/* Calendar grid */}
       <div className="grid grid-cols-7 gap-2">
         {matrix.flat().map((day, i) => {
@@ -106,11 +108,11 @@ export function CalendarBox({ schedule = [] }) {
                 className={clsx(
                   "w-10 h-10 flex items-center justify-center rounded-xl font-bold text-lg transition-all duration-200 shadow-sm border relative",
                   day
-                    ? "bg-white dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 text-zinc-800 dark:text-zinc-100"
+                    ? "calendarBox border-zinc-200 dark:border-zinc-700 subheading"
                     : "opacity-0 pointer-events-none",
                   isSelected && "bg-gradient-to-br from-blue-500 to-indigo-500 text-white border-blue-500 shadow-lg scale-105 z-10",
                   day && !isSelected && "hover:bg-blue-50 dark:hover:bg-zinc-700 hover:border-blue-400",
-                  markToday && "border-2 border-blue-400"
+                  markToday && "border-2 border-blue0"
                 )}
                 style={{
                   boxShadow: day ? "0 2px 8px 0 rgba(80,80,180,0.06)" : undefined,
@@ -119,7 +121,7 @@ export function CalendarBox({ schedule = [] }) {
                 {day}
                 {/* Today dot */}
                 {markToday && (
-                  <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-blue-400" />
+                  <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-blue" />
                 )}
               </div>
               {/* Event bar */}
@@ -136,9 +138,11 @@ export function CalendarBox({ schedule = [] }) {
           );
         })}
       </div>
+
+
       {/* Events for selected day */}
-      <div className="mt-6">
-        <h3 className="text-base font-semibold mb-2 text-zinc-800 dark:text-zinc-100">
+      <div className="mt-4 ">
+        <h3 className="subheading mb-2">
           Revisions on {date.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' })}
         </h3>
         <ul>
@@ -146,7 +150,7 @@ export function CalendarBox({ schedule = [] }) {
             .map(s => (
               <li
                 key={s.noteId}
-                className="flex items-center bg-zinc-100 dark:bg-zinc-800 rounded-lg px-0 py-2 mb-2 text-zinc-800 dark:text-zinc-100 font-medium shadow-sm transition-all relative"
+                className="flex items-center inner-card px-0 py-2 mb-2 transition-all relative"
                 style={{ overflow: "hidden", minHeight: 44 }}
               >
                 <span
@@ -162,6 +166,7 @@ export function CalendarBox({ schedule = [] }) {
             ))}
         </ul>
       </div>
+
     </div>
   );
 }

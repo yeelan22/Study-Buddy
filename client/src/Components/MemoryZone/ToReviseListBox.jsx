@@ -32,9 +32,9 @@ export function ToReviseListBox({
   }));
 
   return (
-    <div className="bg-white dark:bg-charcoal rounded-2xl shadow flex flex-col gap-6 p-6 h-full w-full max-w-md">
+    <div className="card card-hover flex flex-col gap-6 p-6 h-full w-full max-w-md">
       <div>
-        <h3 className="text-lg font-semibold mb-4">All Notes</h3>
+        <h3 className="heading-2 mb-4">All Notes</h3>
         <Timeline
           notes={timelineData}
           openIdx={openIdx}
@@ -45,15 +45,15 @@ export function ToReviseListBox({
 
       {/* ✅ Updated Recall Schedule Section */}
       <div>
-        <h3 className="text-lg font-semibold mb-2">📅 Recall Schedule</h3>
+        <h3 className="heading-2 mb-2">Recall Schedule</h3>
         <ul className="space-y-2">
           {schedule.length === 0 ? (
-            <p className="text-sm text-gray-400">No scheduled sessions yet</p>
+            <p className="subheading">No scheduled sessions yet</p>
           ) : (
             schedule.map((s) => (
               <li
                 key={s.noteId}
-                className="flex justify-between items-center bg-[#23243a] px-4 py-2 rounded-lg cursor-pointer hover:bg-[#2e2e4a]"
+                className="inner-card flex justify-between items-center px-4 py-2 cursor-pointer"
                 onClick={() => {
                   const flatNotes = Object.values(notes).flat();
                   const matched = flatNotes.find((n) => n._id === s.noteId);
@@ -111,7 +111,7 @@ function Timeline({ notes, openIdx, handleMainClick, handleSubClick }) {
                         : "none",
                   }}
                   transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                  className="w-6 h-6 bg-blue-600 rounded-full border-2 border-blue-400 cursor-pointer"
+                  className="w-6 h-6 bg-blue rounded-full border-2 border-blue-600 cursor-pointer"
                   onClick={() => handleMainClick(item.idx)}
                 />
               ) : (
@@ -120,17 +120,17 @@ function Timeline({ notes, openIdx, handleMainClick, handleSubClick }) {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.5, y: -10 }}
                   transition={{ delay: 0.05 * item.subIdx }}
-                  className="w-4 h-4 bg-blue-400 rounded-full cursor-pointer"
+                  className="w-4 h-4 bg-blue rounded-full cursor-pointer"
                 />
               )}
             </div>
             <div
               className={
                 item.type === "main"
-                  ? `text-base font-medium cursor-pointer transition-colors duration-200 ${
-                      openIdx === item.idx ? "text-blue-400" : "text-white"
+                  ? ` transition-colors duration-200 ${
+                      openIdx === item.idx ? "text-blue" : "subheading "
                     }`
-                  : "text-gray-300 text-sm ml-2 cursor-pointer hover:text-blue-300"
+                  : "subheading ml-2 cursor-pointer hover:text-blue-400 dark:hover:text-blue-300"
               }
               style={{
                 fontSize: item.type === "main" ? "1.08rem" : undefined,

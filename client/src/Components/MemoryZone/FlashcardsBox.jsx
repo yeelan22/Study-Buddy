@@ -33,7 +33,7 @@ export function FlashcardsBox({ cards, onSessionComplete }) {
 
   if (validCards.length === 0) {
     return (
-      <div className="text-center text-gray-500 py-20">
+      <div className="text-center subheading py-20">
         No flashcards to review. Please select a note with Q&A.
       </div>
     );
@@ -78,12 +78,6 @@ export function FlashcardsBox({ cards, onSessionComplete }) {
     const noteId = cards[0]?.noteId || null;
 
     if (onSessionComplete && noteId) {
-      console.log("🔁 Submitting session with data:", {
-        noteId,
-        rating,
-        wrongCount: count,
-        durationMs,
-      });
 
       onSessionComplete({
         noteId,
@@ -102,20 +96,17 @@ export function FlashcardsBox({ cards, onSessionComplete }) {
   };
 
   const cardBg =
-    "bg-white dark:bg-[#181828] border border-[#2222] dark:border-[#333] shadow-xl transition-colors duration-300";
+    " bg-black-100 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 transition-colors duration-300";
 
   return (
     <div
       ref={cardRef}
-      className={`relative w-full max-w-xl mx-auto h-full p-6 rounded-2xl ${cardBg} flex flex-col items-center justify-between`}
+      className={`relative w-full max-w-xl mx-auto h-full shadow-md p-6 rounded-2xl ${cardBg} flex flex-col items-center justify-between`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onMouseMove={handleMouseMove}
       onClick={handleCardClick}
       style={{
-        boxShadow: hovered
-          ? "0 0 32px 8px #a78bfa, 0 0 0 2px #a78bfa"
-          : "0 2px 16px 0 #0002",
         overflow: "hidden",
         minHeight: 0,
         flex: "1 1 0%",
@@ -149,18 +140,6 @@ export function FlashcardsBox({ cards, onSessionComplete }) {
         })}
       </div>
 
-      {/* Border Shine */}
-      {hovered && (
-        <div
-          className="pointer-events-none absolute inset-0 z-30"
-          style={{
-            background: `radial-gradient(circle at ${mouse.x}% ${mouse.y}%, rgba(167,139,250,0.7) 0%, rgba(167,139,250,0.3) 30%, transparent 60%)`,
-            borderRadius: "inherit",
-            transition: "background 0.1s",
-            mixBlendMode: "lighter",
-          }}
-        />
-      )}
 
       {/* Content */}
       <div className="relative z-20 flex-1 flex flex-col items-center justify-center min-h-[220px] w-full">
@@ -174,14 +153,14 @@ export function FlashcardsBox({ cards, onSessionComplete }) {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
               >
-                <span className="text-2xl font-bold text-violet-500 mb-6">How was this session?</span>
+                <span className="text-2xl font-bold text-blue mb-6">How was this session?</span>
                 <div className="flex justify-center gap-4">
                   {["Easy", "Medium", "Hard"].map((level, i) => (
                     <button
                       key={level}
-                      className={`px-5 py-2 rounded-lg font-semibold text-base border-2 border-violet-400
-                        bg-white dark:bg-[#181828] hover:bg-violet-50 dark:hover:bg-violet-900/40
-                        text-violet-700 dark:text-violet-200 transition-all duration-200 shadow
+                      className={`px-5 py-2 rounded-lg font-semibold text-base border-2 border-blue
+                        bg-white dark:bg-blue hover:bg-blue-50 dark:hover:bg-blue/40
+                        text-blue dark:text-blue-200 transition-all duration-200 shadow
                         ${i === 0 ? "hover:ring-2 hover:ring-green-400" : i === 2 ? "hover:ring-2 hover:ring-red-400" : ""}`}
                       onClick={e => {
                         e.stopPropagation();
@@ -201,12 +180,12 @@ export function FlashcardsBox({ cards, onSessionComplete }) {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
               >
-                <span className="text-xl font-bold text-cyan-400 mb-4">How many questions did you get wrong?</span>
+                <span className="text-xl font-bold text-blue mb-4">How many questions did you get wrong?</span>
                 <div className="flex justify-center gap-3">
                   {[0, 1, 2, 3, 4].map(n => (
                     <button
                       key={n}
-                      className="bg-cyan-500 text-white rounded-full px-4 py-2 hover:bg-cyan-600 transition shadow"
+                      className="bg-blue text-white rounded-full px-4 py-2 hover:bg-blue-400 transition shadow"
                       onClick={e => {
                         e.stopPropagation();
                         handleWrongCount(n);
@@ -226,7 +205,7 @@ export function FlashcardsBox({ cards, onSessionComplete }) {
               animate={{ y: 0, opacity: 1 }}
               exit={{ opacity: 0, y: -40 }}
             >
-              <span className="text-3xl font-bold text-violet-500 mb-2">Q.</span>
+              <span className="text-3xl font-bold text-blue mb-2">Q.</span>
               <span className="text-xl font-semibold text-gray-900 dark:text-white text-center">
                 {validCards[index].question}
               </span>
@@ -271,7 +250,7 @@ export function FlashcardsBox({ cards, onSessionComplete }) {
             <button
               key={i}
               className={`h-2 w-2 rounded-full transition-all duration-200 ${
-                i === index ? "bg-violet-400 scale-125" : "bg-gray-300 dark:bg-gray-700"
+                i === index ? "bg-blue scale-125" : "bg-gray-300 dark:bg-gray-700"
               }`}
               onClick={e => {
                 e.stopPropagation();
@@ -290,7 +269,7 @@ export function FlashcardsBox({ cards, onSessionComplete }) {
         <>
           <div className="absolute top-1/2 left-2 -translate-y-1/2 z-30">
             <button
-              className="rounded-full bg-violet-100 dark:bg-violet-900/60 p-2 text-violet-600 dark:text-violet-300 shadow hover:bg-violet-200 dark:hover:bg-violet-800 transition"
+              className="rounded-full bg-violet-100 dark:bg-violet-900/60 p-2 text-blue-400 dark:text-violet-300 shadow hover:bg-violet-200 dark:hover:bg-violet-800 transition"
               onClick={e => {
                 e.stopPropagation();
                 goPrev();

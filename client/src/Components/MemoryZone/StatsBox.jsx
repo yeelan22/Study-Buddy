@@ -50,8 +50,8 @@ export function StatsBox({ schedule = [] }) {
   );
 
   return (
-    <div className="bg-[#18192A] text-white rounded-2xl shadow p-6 w-full h-full flex flex-col gap-6">
-      <h3 className="text-lg font-semibold mb-2">🧠 Revision Stats</h3>
+    <div className="card card-hover p-6 w-full h-full flex flex-col gap-6">
+      <h3 className="heading-2 mb-2">Revision Stats</h3>
 
       {/* Progress Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
@@ -59,14 +59,14 @@ export function StatsBox({ schedule = [] }) {
         <StatItem icon={<Repeat2 size={18} />} label="Reviewed Notes" value={stats.reviewedNotes} />
         <StatItem icon={<CircleGauge size={18} />} label="Flashcards Reviewed" value={stats.flashcardsReviewed} />
         <StatItem icon={<Hourglass size={18} />} label="Avg Session" value={stats.avgSession} />
-        <StatItem icon={<Flame size={18} />} label="Streak Days" value={`${stats.streakDays}🔥`} />
+        <StatItem icon={<Flame size={18} />} label="Streak Days" value={`${stats.streakDays}`} />
         <StatItem icon={<Award size={18} />} label="Best Topic" value={stats.bestTopic} />
       </div>
 
       {/* Forgetting Risk */}
       <div>
-        <h4 className="text-md font-semibold text-violet-400 mb-2">⚠️ Forgetting Risk</h4>
-        <ul className="text-sm list-disc pl-5 text-gray-300 space-y-1">
+        <h4 className="heading-2 mb-2">Forgetting Risk</h4>
+        <ul className="text-sm list-disc pl-5 text-gray-400 space-y-1">
           <li>{stats.reviewToday} notes due for review today</li>
           <li>{stats.highRisk} notes are at high forgetting risk</li>
           <li>Weakest Topics: {stats.weakestTopics.join(', ') || 'N/A'}</li>
@@ -75,12 +75,12 @@ export function StatsBox({ schedule = [] }) {
 
       {/* Rating Distribution Chart */}
       <div>
-        <h4 className="text-md font-semibold text-cyan-400 mb-2">📊 Flashcard Ratings</h4>
+        <h4 className="heading-2 mb-2"> Flashcard Ratings</h4>
         <ResponsiveContainer width="100%" height={140}>
           <BarChart data={ratingChartData}>
             <XAxis dataKey="level" stroke="#ccc" />
             <Tooltip />
-            <Bar dataKey="value" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="value" fill="#3b82f6" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -90,11 +90,11 @@ export function StatsBox({ schedule = [] }) {
 
 function StatItem({ icon, label, value }) {
   return (
-    <div className="bg-[#23243a] rounded-lg px-4 py-3 flex items-center gap-3">
-      <div className="text-violet-400">{icon}</div>
+    <div className="inner-card px-4 py-3 flex items-center gap-3">
+      <div className="text-blue">{icon}</div>
       <div className="flex flex-col">
-        <span className="text-xs text-gray-400">{label}</span>
-        <span className="font-semibold text-white">{value}</span>
+        <span className="text-sm text-gray-500">{label}</span>
+        <span className="font-bold dark:font-semibold text-charcoal dark:text-white">{value}</span>
       </div>
     </div>
   );

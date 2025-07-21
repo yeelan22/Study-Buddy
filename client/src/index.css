@@ -11,19 +11,127 @@ body {
 }
 
 @theme {
-    /* Colors */
-    --color-charcoal: #0f172a;
-    --color-zinc-gray: #1e293b;
-    --color-blue: #3b82f6;
-    --color-emerald: #10b981;
-    --color-rose: #f43f5e;
+    /* Primary Brand Colors */
+    --color-charcoal: #0f172a;         /* Deep background, dark mode */
+    --color-zinc-gray: #1e293b;        /* Main dark gray */
+    --color-blue: #3b82f6;             /* Accent blue */
+    --color-emerald: #10b981;          /* Accent green */
+    --color-rose: #f43f5e;             /* Accent red/pink */
 
-    --color-text-primary: #1e293b;
+    /* Glassmorphism Colors */
+    --glass-light-bg: rgba(243, 244, 255, 0.1);   /* Light glass background */
+    --glass-light-border: rgba(255,255,255,0.8);  /* Light glass border */
+    --glass-dark-bg: rgba(36, 40, 54, 0.3);       /* Dark glass background (increased opacity for visibility) */
+    --glass-dark-border: rgba(255,255,255,0.2);  /* Dark glass border (increased opacity for faint white edge) */
 
+    /* Card Colors */
+    --card-light-bg: rgba(255,255,255);           /* Card on light glass */
+    --card-dark-bg: rgba(36, 40, 54, 0.3);        /* Card on dark glass (slight increase for depth) */
+
+    /* Text Colors */
+    --color-text-primary: #1e293b;                /* Main text, light mode */
+    --color-text-secondary: #64748b;              /* Subtle text, light mode */
+    --color-text-dark: #f1f5f9;                   /* Main text, dark mode */
+    --color-text-dark-secondary: #cbd5e1;         /* Subtle text, dark mode */
 
     /* Fonts */
     --sans: "Inter", sans-serif;
     --mono: "JetBrains Mono", monospace;
+}
+
+/* Headings */
+.heading-1 {
+  @apply text-3xl font-bold tracking-tight;
+  color: var(--color-text-primary);
+  font-family: var(--sans);
+}
+.dark .heading-1 {
+  color: var(--color-text-dark);
+}
+
+.heading-2 {
+  @apply text-xl font-semibold tracking-tight;
+  color: var(--color-text-primary);
+  font-family: var(--sans);
+}
+.dark .heading-2 {
+  color: var(--color-text-dark-secondary);
+}
+
+.subheading {
+  @apply text-base font-medium;
+  color: var(--color-text-secondary);
+  font-family: var(--sans);
+}
+.dark .subheading {
+  color: var(--color-text-dark-secondary);
+}
+
+/* Glassy Container (main background section) */
+.glass-container {
+  @apply rounded-3xl shadow-xl border transition-colors duration-300;
+  background: var(--glass-light-bg);
+  border: 1px solid var(--glass-light-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);  /* Standardized for consistency */
+  color: var(--color-text-primary);
+}
+.dark .glass-container {
+  background: var(--glass-dark-bg);
+  border: 1px solid var(--glass-dark-border);
+  color: var(--color-text-dark);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);  /* Subtle shadow for lifted glass effect (matches first image) */
+}
+
+/* Card (on top of glass container) */
+.card {
+  @apply rounded-2xl p-5 shadow-lg border transition duration-300;
+  background: var(--card-light-bg);
+  border: 1px solid var(--glass-light-border);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--color-text-primary);
+}
+.dark .card {
+  background: var(--card-dark-bg);
+  border: 1px solid var(--glass-dark-border);
+  color: var(--color-text-dark);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);  /* Subtle shadow for depth */
+}
+
+/* Optional: Card shadow hover effect */
+.card-hover {
+  @apply hover:shadow-2xl transition-shadow duration-200;
+}
+
+.inner-card {
+  @apply rounded-lg shadow-sm;
+  background: linear-gradient(145deg,#3b83f618, #f3e8ff38);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: var(--glass-light-border);
+}
+
+.dark .inner-card {
+  background: var(--color-charcoal);
+  border: none;
+}
+
+.calendarBox {
+   @apply rounded-lg shadow-sm;
+  background: linear-gradient(145deg,#3b83f66e, rgba(243, 232, 255, 0));
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: var(--glass-light-border);
+}
+
+.dark .calendarBox {
+  background: var(--color-charcoal);
+  border: none;
+}
+/* For accent text (like your blue) */
+.text-accent {
+  color: var(--color-blue);
 }
 
 @layer components {
@@ -33,7 +141,6 @@ body {
         margin: 0 auto;
     }
 }
-
 
 /* Custom Scroll Bar for chatSmart page */
 .custom-scrollbar::-webkit-scrollbar {
@@ -46,8 +153,6 @@ body {
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
-
-
 
 /* Memory Zone Grid */
 

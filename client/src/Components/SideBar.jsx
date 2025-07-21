@@ -113,7 +113,7 @@ export const SideBar = () => {
         animate={sidebarMode}
         initial={false}
         className={`hidden md:flex my-4 mx-3 rounded-3xl flex-col h-screen fixed top-0 left-0 z-30 py-6 px-2 transition-colors
-          ${theme === 'dark' ? '' : ''}
+           glass-container
         `}
         style={{ width: sidebarWidth }}
       >
