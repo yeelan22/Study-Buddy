@@ -1,12 +1,8 @@
-// store/uiStore.js
 import { create } from 'zustand';
 
 export const useUIStore = create((set) => ({
+  // 🌙 Theme State
   theme: 'light',
-  sidebarMode: 'open', // 'open' | 'mini' | 'closed'
-  isSidebarOpen: false, // for mobile only
-
-  // Theme methods...
   initTheme: () => {
     const stored = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -16,24 +12,35 @@ export const useUIStore = create((set) => ({
   },
   toggleTheme: () =>
     set((state) => {
-      const newTheme = state.theme === 'dark' ? 'light' : 'dark';
+      const newTheme = state.theme === 'dark' ? 'light' : 'light';
       document.documentElement.classList.toggle('dark', newTheme === 'dark');
       localStorage.setItem('theme', newTheme);
       return { theme: newTheme };
     }),
 
-  // Sidebar methods
+  // 🧭 Sidebar State
+  sidebarMode: 'open',
+  isSidebarOpen: false,
   setSidebarMode: (mode) => set({ sidebarMode: mode }),
   toggleSidebarMode: () =>
-    set((state) => ({
-      sidebarMode: state.sidebarMode === 'open' ? 'mini' : 'open',
-    })),
+    set((state) => ({ sidebarMode: state.sidebarMode === 'open' ? 'mini' : 'open' })),
   openSidebar: () => set({ isSidebarOpen: true }),
   closeSidebar: () => set({ isSidebarOpen: false }),
   toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
 
-  // Topbar methods...
+  // 📏 Topbar State
+  isTopbarVisible: true,
   toggleTopbar: () => set((state) => ({ isTopbarVisible: !state.isTopbarVisible })),
   showTopbar: () => set({ isTopbarVisible: true }),
   hideTopbar: () => set({ isTopbarVisible: false }),
+
+  // 🧠 Mind Map State (used by MindMap.jsx)
+  mindMapData: null, // contains { nodes, edges, summary }
+  setMindMapData: (data) => set({ mindMapData: data }),
+
+  // 📝 Notes-related UI
+  selectedNoteId: null,
+  selectedNoteSummary: '',
+  setSelectedNoteId: (id) => set({ selectedNoteId: id }),
+  setSelectedNoteSummary: (summary) => set({ selectedNoteSummary: summary }),
 }));

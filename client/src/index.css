@@ -21,7 +21,7 @@ body {
     /* Glassmorphism Colors */
     --glass-light-bg: rgba(243, 244, 255, 0.1);   /* Light glass background */
     --glass-light-border: rgba(255,255,255,0.8);  /* Light glass border */
-    --glass-dark-bg: rgba(36, 40, 54, 0.3);       /* Dark glass background (increased opacity for visibility) */
+    --glass-dark-bg: rgba(36, 40, 54, 0.43);       /* Dark glass background (increased opacity for visibility) */
     --glass-dark-border: rgba(255,255,255,0.2);  /* Dark glass border (increased opacity for faint white edge) */
 
     /* Card Colors */
@@ -85,11 +85,11 @@ body {
 
 /* Card (on top of glass container) */
 .card {
-  @apply rounded-2xl p-5 shadow-lg border transition duration-300;
+  @apply rounded-2xl shadow-lg border transition duration-300;
   background: var(--card-light-bg);
   border: 1px solid var(--glass-light-border);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   color: var(--color-text-primary);
 }
 .dark .card {
@@ -99,9 +99,28 @@ body {
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);  /* Subtle shadow for depth */
 }
 
+.toolCard {
+  @apply rounded-full p-3 shadow-lg border transition duration-300;
+  background: var(--card-light-bg);
+  border: 1px solid var(--glass-light-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  color: var(--color-text-primary);
+}
+.dark .toolCard {
+  background: var(--card-dark-bg);
+  border: 1px solid var(--glass-dark-border);
+  color: var(--color-text-dark);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);  /* Subtle shadow for depth */
+}
+
 /* Optional: Card shadow hover effect */
 .card-hover {
   @apply hover:shadow-2xl transition-shadow duration-200;
+}
+
+.toolCard-hover {
+  @apply border hover:border-emerald transition-shadow duration-200;
 }
 
 .inner-card {
