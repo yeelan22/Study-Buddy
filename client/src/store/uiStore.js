@@ -36,7 +36,8 @@ export const useUIStore = create((set) => ({
 
   // 🧠 Mind Map State (used by MindMap.jsx)
   mindMapData: null, // contains { nodes, edges, summary }
-  setMindMapData: (data) => set({ mindMapData: data }),
+  setMindMapData: ({ nodes, edges }) => set({ mindMapData: { nodes, edges } }),
+
 
   // 📝 Notes-related UI
   selectedNoteId: null,
