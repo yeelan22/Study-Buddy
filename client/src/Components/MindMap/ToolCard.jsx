@@ -3,7 +3,7 @@ import { Sparkle, BrainCog, Palette, Volume2, PencilRuler } from "lucide-react";
 import { ToolItem } from "../MindMap";
 import { useUIStore } from "../../store/uiStore";
 
-export function ToolCard({ onClose, showSummary, setShowSummary }) {
+export function ToolCard({ onClose, showSummary, setShowSummary, showAskAI, setShowAskAI }) {
   const summary = useUIStore((s) => s.selectedNoteSummary);
 
   const tools = [
@@ -11,13 +11,19 @@ export function ToolCard({ onClose, showSummary, setShowSummary }) {
       name: "Show Summary",
       icon: Sparkle,
       tooltip: "Show a quick summary",
-      onClick: () => setShowSummary(!showSummary),
+      onClick: () => {
+        setShowSummary(!showSummary);
+        setShowAskAI(false);
+      },
     },
     {
       name: "Ask AI",
       icon: BrainCog,
       tooltip: "Ask AI about this mind map",
-      onClick: () => alert("Ask AI clicked"),
+      onClick: () => {
+        setShowAskAI(!showAskAI);
+        setShowSummary(false);
+      },
     },
     {
       name: "Visual Settings",
@@ -52,7 +58,10 @@ export function ToolCard({ onClose, showSummary, setShowSummary }) {
             label={tool.name}
             tooltip={tool.tooltip}
             onClick={tool.onClick}
-            active={tool.name === "Show Summary" && showSummary}
+            active={
+              (tool.name === "Show Summary" && showSummary) ||
+              (tool.name === "Ask AI" && showAskAI)
+            }
           />
         ))}
       </div>

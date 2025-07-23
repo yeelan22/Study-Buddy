@@ -3,11 +3,13 @@ import { Tooltip, NotesCard, ToolCard, FloatingSummaryBox } from '../MindMap';
 import { Sparkle, StickyNote } from 'lucide-react';
 import { gsap } from 'gsap';
 import { useUIStore } from '../../store/uiStore';
+import { FloatingAskAIBOX } from '../MindMap/FloatingAskAIBOX'; // Make sure this path is correct
 
 export function MindMapSidebar() {
   const [open, setOpen] = useState(null); // 'tools' | 'notes' | null
   const cardRef = useRef();
   const [showSummary, setShowSummary] = useState(false);
+  const [showAskAI, setShowAskAI] = useState(false);
   const summary = useUIStore((s) => s.selectedNoteSummary);
 
   // Responsive: detect mobile
@@ -30,13 +32,21 @@ export function MindMapSidebar() {
   const closeAll = () => {
     setOpen(null);
     setShowSummary(false);
+    setShowAskAI(false);
   };
 
   // Overlay for closing on click anywhere (including React Flow)
-  const showOverlay = open !== null || showSummary;
+  const showOverlay = open !== null || showSummary || showAskAI;
 
   // Handler to open summary box from ToolCard
-  const handleShowSummary = (show) => setShowSummary(show);
+  const handleShowSummary = (show) => {
+    setShowSummary(show);
+    if (show) setShowAskAI(false);
+  };
+  const handleShowAskAI = (show) => {
+    setShowAskAI(show);
+    if (show) setShowSummary(false);
+  };
 
   return (
     <>
@@ -60,6 +70,7 @@ export function MindMapSidebar() {
                 e.stopPropagation();
                 setOpen(open === 'tools' ? null : 'tools');
                 setShowSummary(false);
+                setShowAskAI(false);
               }}
             >
               <Sparkle className="w-6 h-6 text-blue" />
@@ -73,6 +84,7 @@ export function MindMapSidebar() {
                 e.stopPropagation();
                 setOpen(open === 'notes' ? null : 'notes');
                 setShowSummary(false);
+                setShowAskAI(false);
               }}
             >
               <StickyNote className="w-6 h-6 text-emerald" />
@@ -89,6 +101,7 @@ export function MindMapSidebar() {
                 e.stopPropagation();
                 setOpen(open === 'tools' ? null : 'tools');
                 setShowSummary(false);
+                setShowAskAI(false);
               }}
             >
               <Sparkle className="w-6 h-6 text-blue" />
@@ -102,6 +115,7 @@ export function MindMapSidebar() {
                 e.stopPropagation();
                 setOpen(open === 'notes' ? null : 'notes');
                 setShowSummary(false);
+                setShowAskAI(false);
               }}
             >
               <StickyNote className="w-6 h-6 text-emerald" />
@@ -128,6 +142,8 @@ export function MindMapSidebar() {
               onClose={closeAll}
               showSummary={showSummary}
               setShowSummary={handleShowSummary}
+              showAskAI={showAskAI}
+              setShowAskAI={handleShowAskAI}
             />
           )}
           {open === 'notes' && <NotesCard onClose={closeAll} />}
@@ -140,6 +156,11 @@ export function MindMapSidebar() {
           summary={summary}
           onClose={closeAll}
         />
+      )}
+
+      {/* Floating Ask AI box */}
+      {showAskAI && open === 'tools' && (
+        <FloatingAskAIBOX onClose={closeAll} />
       )}
     </>
   );

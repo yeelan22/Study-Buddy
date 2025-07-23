@@ -23,6 +23,9 @@ export function NotesCard({ onClose }) {
       edges: edges || [],
     });
 
+    useUIStore.getState().setSelectedNoteId(note._id);
+
+
     console.log("🧠 Mind map data:", { nodes, edges });
   } catch (err) {
     console.error("❌ Failed to load mind map:", err);

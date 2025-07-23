@@ -5,4 +5,5 @@ export { NotesCard } from './NotesCard';
 export { Tooltip } from './Tooltip';
 export { ToolCard } from './ToolCard';
 export { FloatingSummaryBox } from './FloatingSummaryBox';
+export { Button } from './Button';
 

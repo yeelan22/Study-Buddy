@@ -12,7 +12,7 @@ export const useUIStore = create((set) => ({
   },
   toggleTheme: () =>
     set((state) => {
-      const newTheme = state.theme === 'dark' ? 'light' : 'light';
+      const newTheme = state.theme === 'dark' ? 'light' : 'dark';
       document.documentElement.classList.toggle('dark', newTheme === 'dark');
       localStorage.setItem('theme', newTheme);
       return { theme: newTheme };
@@ -44,4 +44,36 @@ export const useUIStore = create((set) => ({
   selectedNoteSummary: '',
   setSelectedNoteId: (id) => set({ selectedNoteId: id }),
   setSelectedNoteSummary: (summary) => set({ selectedNoteSummary: summary }),
+
+
+  // In your useUIStore:
+  updateNode: (id, data) => set(state => ({
+    mindMapData: {
+      ...state.mindMapData,
+      nodes: state.mindMapData.nodes.map(n =>
+        n.id === id ? { ...n, ...data } : n
+      )
+    }
+  })),
+  deleteNode: (id) => set(state => ({
+      mindMapData: {
+      ...state.mindMapData,
+      nodes: state.mindMapData.nodes.filter(n => n.id !== id),
+      edges: state.mindMapData.edges.filter(e => e.source !== id && e.target !== id)
+    }
+  })),
+
+  updateNodePosition: (id, position) => set(state => ({
+  mindMapData: {
+    ...state.mindMapData,
+    nodes: state.mindMapData.nodes.map(n =>
+      n.id === id ? { ...n, x: position.x, y: position.y } : n
+    )
+  }
+   })),
+
+  viewMode: 'mindmap',
+  setViewMode: (mode) => set({ viewMode: mode }),
+
+   
 }));
