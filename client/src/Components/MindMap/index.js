@@ -6,4 +6,6 @@ export { Tooltip } from './Tooltip';
 export { ToolCard } from './ToolCard';
 export { FloatingSummaryBox } from './FloatingSummaryBox';
 export { Button } from './Button';
+export { DrawingCanvas } from "./DrawingCanvas"
+export { MindMapFlow } from "./MindMapFlow"
 
