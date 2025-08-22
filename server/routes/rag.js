@@ -7,19 +7,29 @@ const router = express.Router();
 router.use(authenticate);
 
 router.post('/', async (req, res) => {
-  const { query } = req.body;
+  const { query, chatId } = req.body;
   if (!query) return res.status(400).json({ error: 'No query' });
 
   try {
-    const assistantMsg = await answerWithRAG(req.userId, query);
+    let chat;
 
-    let chat = await Chat.findOne({ userId: req.userId });
-    if (!chat) chat = await Chat.create({ userId: req.userId, messages: [] });
-    chat.messages.push({ role: 'user', content: query });
-    chat.messages.push(assistantMsg);
+    if (chatId) {
+      chat = await Chat.findOne({ _id: chatId, userId: req.userId });
+    }
+
+    // If chat not found, create new one
+    if (!chat) {
+      chat = await Chat.create({ userId: req.userId, messages: [] });
+    }
+
+    const userMessage = { role: 'user', content: query };
+    const assistantMessage = await answerWithRAG(req.userId, query);
+
+    // Store messages
+    chat.messages.push(userMessage, assistantMessage);
     await chat.save();
 
-    res.json(assistantMsg);
+    res.json({ reply: assistantMessage, chatId: chat._id });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'RAG error' });
@@ -27,3 +37,4 @@ router.post('/', async (req, res) => {
 });
 
 export default router;
+

@@ -22,26 +22,22 @@ router.post('/', async (req, res) => {
   const { messages, content, chatId } = req.body;
 
   try {
-    let chat;
-
-    if (chatId) {
-      chat = await Chat.findById(chatId);
+    if (!chatId) {
+      return res.status(400).json({ error: 'No chatId provided' });
     }
 
-    // fallback to find or create latest chat for user
+    let chat = await Chat.findById(chatId);
+
     if (!chat) {
-      chat = await Chat.findOne({ userId: req.userId }).sort({ updatedAt: -1 });
-      if (!chat) {
-        chat = await Chat.create({ userId: req.userId, messages: [] });
-      }
+      return res.status(404).json({ error: 'Chat not found' });
     }
 
-    const userMsg = content || messages?.at(-1); // support both styles
-    if (!userMsg || !userMsg.content) {
+    const userText = typeof content === 'string' ? content : messages?.at(-1)?.content;
+    if (!userText) {
       return res.status(400).json({ error: 'No content provided' });
     }
 
-    chat.messages.push({ role: 'user', content: userMsg.content });
+    chat.messages.push({ role: 'user', content: userText });
 
     const response = await axios.post('https://openrouter.ai/api/v1/chat/completions', {
       model: "mistralai/mistral-7b-instruct",
@@ -65,5 +61,42 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.get('/history/all', async (req, res) => {
+  try {
+    const chats = await Chat.find({ userId: req.userId }).sort({ updatedAt: -1 });
+
+    const formattedChats = chats.map(chat => ({
+      _id: chat._id,
+      preview: chat.messages?.[0]?.content || '',
+      updatedAt: chat.updatedAt
+    }));
+
+    res.json({ chats: formattedChats });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch chat history' });
+  }
+});
+
+router.post('/new', async (req, res) => {
+  try {
+    const newChat = await Chat.create({ userId: req.userId, messages: [] });
+    res.status(201).json({ chatId: newChat._id });
+  } catch (err) {
+    console.error('Error creating new chat:', err);
+    res.status(500).json({ error: 'Failed to create new chat' });
+  }
+});
+
+router.get('/:id', async (req, res) => {
+  try {
+    const chat = await Chat.findOne({ _id: req.params.id, userId: req.userId });
+    if (!chat) return res.status(404).json({ error: 'Chat not found' });
+    res.json({ chat });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to load chat' });
+  }
+});
 
 export default router;

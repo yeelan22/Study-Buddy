@@ -1,10 +1,8 @@
-// routes/upload.js
 import express from 'express';
 import fs from 'fs/promises';
-import path from 'path';
 import crypto from 'crypto';
 
-import { processNoteForRAG } from '../utils/EmbedAndStore.js';
+import { generateMemoryData } from '../utils/llm.js';
 import upload from '../middleware/upload.js';
 import { extractTextFromPDF, extractTextFromDocx, extractTextFromImage } from '../utils/analyzeFile.js';
 import Note from '../models/note.js';
@@ -12,14 +10,10 @@ import { authenticate } from '../middleware/auth.js';
 
 const router = express.Router();
 
-/**
- * POST /api/upload
- * Auth-protected route to receive file uploads
- */
 router.post('/', authenticate, upload.single('note'), async (req, res) => {
   try {
     const file = req.file;
-    const userId = req.userId; // ✅ From token, NOT the body — much safer
+    const userId = req.userId;
     if (!file || !userId) return res.status(400).json({ error: 'No file or user ID' });
 
     const buffer = await fs.readFile(file.path);
@@ -47,16 +41,35 @@ router.post('/', authenticate, upload.single('note'), async (req, res) => {
       return res.status(400).json({ error: 'Unsupported file type' });
     }
 
+    // Generate Q&A, category, title
+    let category = '';
+    let title = '';
+    let qa = [];
+    try {
+      console.log("📝 Extracted text for LLM:", extractedText.slice(0, 300)); // log first 300 chars
+      const memoryData = await generateMemoryData(extractedText);
+      category = memoryData.category || '';
+      title = memoryData.title || '';
+      qa = memoryData.qa || [];
+      console.log("✅ LLM result:", { category, title, qaCount: qa.length });
+    } catch (err) {
+      console.error('❌ AI Q&A generation failed:', err);
+    }
+
     const note = await Note.create({
       filename: file.originalname,
       filetype: mimetype,
       filepath: file.path,
       extractedText,
       hash,
-      userId, // ✅ Save to DB
+      userId,
+      category,
+      title,
+      qa,
+      processed: true,
     });
 
-    await processNoteForRAG(extractedText, note._id.toString(), userId);
+    console.log("✅ Note saved:", note);
 
     res.json(note);
   } catch (err) {
