@@ -1,6 +1,13 @@
 import { MessageSquare, Copy, Brain } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export function UploadedCard({ note }) {
+  const navigate = useNavigate();
+
+  const handleViewFlashcards = () => {
+    // Navigate to memory zone with the specific note ID
+    navigate(`/app/memoryZone?noteId=${note._id}`);
+  };
   return (
     <div className="uploadedCard_shape card min-w-64 min-h-48 rounded-xl relative p-4 text-white shadow-md">
       {/* Text content */}
@@ -23,11 +30,15 @@ export function UploadedCard({ note }) {
         <button className="inner-card w-8 h-8 flex items-center justify-center transition">
           <MessageSquare size={16} />
         </button>
-        <button className="inner-card w-8 h-8 flex items-center justify-center transition">
+        <button 
+          className="inner-card w-8 h-8 flex items-center justify-center transition hover:bg-blue-600"
+          onClick={handleViewFlashcards}
+          title="View Flashcards"
+        >
           <Copy size={16} />
         </button>
         <button className="inner-card w-8 h-8 flex items-center justify-center transition">
-          <Brain size={16} />
+          <Brain size={16} />       
         </button>
       </div>
     </div>

@@ -10,7 +10,7 @@ import { useNoteStore } from '../../store/noteStore';
 import axios from '../../utils/axiosInstance';
 
 export const MemoryZoneGrid = () => {
-  const { notes } = useNoteStore();
+  const { notes, selectedNoteId, getNoteById } = useNoteStore();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedNote, setSelectedNote] = useState(null);
   const [schedule, setSchedule] = useState([]);
@@ -22,6 +22,17 @@ export const MemoryZoneGrid = () => {
       setSchedule(res.data); // array of { noteId, title, nextDue }
     })();
   }, []);
+
+  // Handle note selection from URL parameter
+  useEffect(() => {
+    if (selectedNoteId) {
+      const note = getNoteById(selectedNoteId);
+      if (note) {
+        setSelectedNote(note);
+        setSelectedCategory(note.category);
+      }
+    }
+  }, [selectedNoteId, getNoteById]);
   
   // handler from FlashcardsBox to update schedule
   const handleSessionComplete = async (sessionData) => {

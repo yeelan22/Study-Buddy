@@ -41,6 +41,7 @@ body {
     /* breakpoints */
     --breakpoint-sml: 38rem;
     --breakpoint-md: 60rem;
+    --breakpoint-lg: 86rem;
 }
 
 /* Headings */
