@@ -1,5 +1,12 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import ReactFlow, { MiniMap, Controls, Background, Handle } from 'reactflow';
+import ReactFlow, {
+  MiniMap,
+  Controls,
+  Background,
+  Handle,
+  useNodesState,
+  useEdgesState,
+} from 'reactflow';
 import 'reactflow/dist/style.css';
 import { useUIStore } from '../../store/uiStore';
 import { MindMapSidebar } from './MindMapSidebar';
@@ -42,7 +49,6 @@ function EditableNode({ id, data, selected, onContextMenu }) {
         border: selected ? '2px solid #1976d2' : '1.5px solid #e0e0e0',
         cursor: 'pointer',
         boxShadow: selected ? '0 0 0 3px #1976d2' : '0 2px 8px #0001',
-        position: 'relative',
         userSelect: 'none',
       }}
     >
@@ -58,47 +64,51 @@ export function MindMapFlow() {
   const updateNode = useUIStore((s) => s.updateNode);
   const deleteNode = useUIStore((s) => s.deleteNode);
   const updateNodePosition = useUIStore((s) => s.updateNodePosition);
+  const setMindMapData = useUIStore((s) => s.setMindMapData);
 
-  const [nodes, setNodes] = useState([]);
-  const [edges, setEdges] = useState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
   const [contextMenu, setContextMenu] = useState(null);
   const [editingNode, setEditingNode] = useState(null);
   const [editValue, setEditValue] = useState('');
 
+  // sync Zustand store -> ReactFlow nodes/edges
   useEffect(() => {
     if (!mindMap) return;
-    const updatedNodes = (mindMap.nodes || []).map((n) => ({
-      id: n.id,
-      type: 'editable',
-      data: {
-        ...n,
-        label: n.label,
-        level: n.level,
-        type: n.level === 0 ? 'title' : n.level === 1 ? 'subtitle' : undefined,
-        bg: n.bg,
-        text: n.text,
-        onDoubleClick: (e) => {
-          e.stopPropagation();
-          setEditingNode(n.id);
-          setEditValue(n.label);
-          setContextMenu(null);
+
+    setNodes(
+      (mindMap.nodes || []).map((n) => ({
+        id: n.id,
+        type: 'editable',
+        data: {
+          ...n,
+          label: n.label,
+          level: n.level,
+          type: n.level === 0 ? 'title' : n.level === 1 ? 'subtitle' : undefined,
+          onDoubleClick: (e) => {
+            e.stopPropagation();
+            setEditingNode(n.id);
+            setEditValue(n.label);
+            setContextMenu(null);
+          },
         },
-      },
-      position: { x: n.x, y: n.y },
-      draggable: true,
-    }));
-    const updatedEdges = (mindMap.edges || []).map((e) => ({
-      id: e.id,
-      source: e.source,
-      target: e.target,
-      label: e.label,
-      animated: true,
-      style: { stroke: '#1976d2', strokeWidth: 2 },
-      labelStyle: { fill: '#1976d2', fontWeight: 500, fontSize: 13 },
-    }));
-    setNodes(updatedNodes);
-    setEdges(updatedEdges);
-  }, [mindMap]);
+        position: { x: n.x, y: n.y },
+      }))
+    );
+
+    setEdges(
+      (mindMap.edges || []).map((e) => ({
+        id: e.id,
+        source: e.source,
+        target: e.target,
+        label: e.label,
+        animated: true,
+        style: { stroke: '#1976d2', strokeWidth: 2 },
+        labelStyle: { fill: '#1976d2', fontWeight: 500, fontSize: 13 },
+      }))
+    );
+  }, [mindMap, setNodes, setEdges]);
 
   const onNodeContextMenu = useCallback((e, node) => {
     e.preventDefault();
@@ -107,8 +117,11 @@ export function MindMapFlow() {
   }, []);
 
   const onPaneClick = useCallback(() => setContextMenu(null), []);
-  const onNodeDragStart = useCallback(() => setContextMenu(null), []);
-  const onNodeDrag = useCallback((e, node) => updateNodePosition(node.id, node.position), []);
+
+  // smooth drag: update store only after drag stops
+  const onNodeDragStop = useCallback((_, node) => {
+    updateNodePosition(node.id, node.position);
+  }, [updateNodePosition]);
 
   const handleEdit = () => {
     setEditingNode(contextMenu.nodeId);
@@ -128,9 +141,11 @@ export function MindMapFlow() {
   };
 
   const handleEditSave = () => {
-    updateNode(editingNode, { label: editValue });
-    setEditingNode(null);
-    setEditValue('');
+    if (editingNode) {
+      updateNode(editingNode, { label: editValue });
+      setEditingNode(null);
+      setEditValue('');
+    }
   };
 
   return (
@@ -138,6 +153,8 @@ export function MindMapFlow() {
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
         nodeTypes={{
           editable: (props) => (
             <EditableNode {...props} onContextMenu={(e) => onNodeContextMenu(e, props)} />
@@ -151,8 +168,7 @@ export function MindMapFlow() {
         minZoom={0.3}
         maxZoom={2}
         onPaneClick={onPaneClick}
-        onNodeDragStart={onNodeDragStart}
-        onNodeDrag={onNodeDrag}
+        onNodeDragStop={onNodeDragStop}
         style={{ background: 'transparent' }}
       >
         <MiniMap nodeColor={(n) => n.data?.bg || '#1976d2'} nodeStrokeColor={(n) => n.selected ? '#1976d2' : '#fff'} nodeBorderRadius={8} />
@@ -160,6 +176,7 @@ export function MindMapFlow() {
         <Background variant="dots" color="#b3e5fc" gap={18} size={1.5} />
       </ReactFlow>
 
+      {/* Inline edit */}
       {editingNode && (
         <div
           style={{
@@ -193,6 +210,7 @@ export function MindMapFlow() {
         </div>
       )}
 
+      {/* Context menu */}
       {contextMenu && (
         <div
           style={{

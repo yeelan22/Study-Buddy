@@ -17,6 +17,16 @@ function App() {
     initTheme(); // ✅ Only theme initialization
   }, []);
 
+  window.addEventListener("beforeunload", () => {
+    const { mindMapData, selectedNoteId } = useUIStore.getState();
+    if (selectedNoteId) {
+      navigator.sendBeacon(
+        `http://localhost:5001/api/mindmap/${selectedNoteId}`,
+        JSON.stringify(mindMapData)
+      );
+    }
+  });
+
   return (
     <Routes>
       {/* Public */}
