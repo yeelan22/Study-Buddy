@@ -6,21 +6,27 @@ export function UploadedCard({ note }) {
       {/* Text content */}
       <div className="mt-8">
         <div className="flex items-center justify-between">
-            <h3 className="font-bol text-lg">category</h3>
-            <p className="text-xs text-gray-400">{new Date(note.uploadedAt).toLocaleDateString()}</p>
+          <h3 className="font-bold text-lg">
+            {note.category || "Uncategorized"}
+          </h3>
+          <p className="text-xs text-gray-400">
+            {new Date(note.uploadedAt).toLocaleDateString()}
+          </p>
         </div>
-        <p className="text-sm opacity-80">fileName</p>
+        <p className="text-sm opacity-80">
+          {note.title || note.filename || "Untitled"}
+        </p>
       </div>
 
       {/* Action icons */}
       <div className="absolute bottom-3 right-3 flex space-x-2">
-        <button className="inner-card w-8 h-8 flex items-center justify-center  transition">
+        <button className="inner-card w-8 h-8 flex items-center justify-center transition">
           <MessageSquare size={16} />
         </button>
-        <button className="inner-card w-8 h-8 flex items-center justify-center  transition">
+        <button className="inner-card w-8 h-8 flex items-center justify-center transition">
           <Copy size={16} />
         </button>
-        <button className="inner-card w-8 h-8 flex items-center justify-center  transition">
+        <button className="inner-card w-8 h-8 flex items-center justify-center transition">
           <Brain size={16} />
         </button>
       </div>
