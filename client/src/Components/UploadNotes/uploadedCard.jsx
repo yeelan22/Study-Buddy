@@ -1,6 +1,6 @@
 import { Sparkle, FileStack, Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { Tooltip } from "../shared";
+import { Tooltip, scrollToTop } from "../shared";
 
 export function UploadedCard({ note }) {
   const navigate = useNavigate();
@@ -9,14 +9,13 @@ export function UploadedCard({ note }) {
     // Navigate to memory zone with the specific note ID
     navigate(`/app/memoryZone?noteId=${note._id}`);
     
-    // Ensure we scroll to top after navigation
+    // Scroll to top immediately and after navigation
+    scrollToTop();
+    
+    // Also scroll after navigation completes
     setTimeout(() => {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth'
-      });
-    }, 100); // Small delay to ensure navigation completes
+      scrollToTop();
+    }, 200);
   };
   return (
     <div className="uploadedCard_shape card min-w-54 min-h-48 rounded-xl relative p-4 text-white shadow-md">
