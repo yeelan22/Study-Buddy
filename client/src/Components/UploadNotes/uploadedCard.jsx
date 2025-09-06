@@ -1,5 +1,6 @@
-import { MessageSquare, Copy, Brain } from "lucide-react";
+import { Sparkle, FileStack, Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Tooltip } from "../shared";
 
 export function UploadedCard({ note }) {
   const navigate = useNavigate();
@@ -36,19 +37,24 @@ export function UploadedCard({ note }) {
 
       {/* Action icons */}
       <div className="absolute bottom-3 right-3 flex space-x-2">
-        <button className="inner-card w-8 h-8 flex items-center justify-center transition">
-          <MessageSquare size={16} />
-        </button>
-        <button 
-          className="inner-card w-8 h-8 flex items-center justify-center transition hover:bg-blue-600"
-          onClick={handleViewFlashcards}
-          title="View Flashcards"
-        >
-          <Copy size={16} />
-        </button>
-        <button className="inner-card w-8 h-8 flex items-center justify-center transition">
-          <Brain size={16} />       
-        </button>
+        <Tooltip text="Generate AI summary and insights">
+          <button className="inner-card w-8 h-8 flex items-center justify-center transition">
+            <Sparkle size={16} />
+          </button>
+        </Tooltip>
+        <Tooltip text="View flashcards for this note">
+          <button 
+            className="inner-card w-8 h-8 flex items-center justify-center transition hover:bg-blue-600"
+            onClick={handleViewFlashcards}
+          >
+            <FileStack size={16} />
+          </button>
+        </Tooltip>
+        <Tooltip text="Create mind map from this note">
+          <button className="inner-card w-8 h-8 flex items-center justify-center transition">
+            <Brain size={16} />       
+          </button>
+        </Tooltip>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { MessageBubble } from "../MessageBubble";
-import { ChatInput } from "../ChatInput";
+import { MessageBubble } from "../ChatSmart/MessageBubble";
+import { ChatInput } from "../ChatSmart/ChatInput";
 import axiosInstance from "../../utils/axiosInstance";
 import { useUserStore } from "../../store/userStore";
 import { useUIStore } from "../../store/uiStore";

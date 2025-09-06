@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react';
 import axios from '../utils/axiosInstance'; // ✅ Use axiosInstance containing headers
 import { useUserStore } from '../store/userStore';
 import { useNoteStore } from '../store/noteStore';
-import { UploadCard, UploadedCard } from '../Components';
+import { UploadCard, UploadedCard } from '../Components/UploadNotes';
+import { Tooltip } from '../Components/shared';
 
 export function UploadNotes() {
   const [file, setFile] = useState(null);
@@ -48,7 +49,9 @@ export function UploadNotes() {
 
   return (
     <div className="w-full mx-auto p-4">
-      <h2 className="heading-2 mb-4">Upload Your Note</h2>
+      <Tooltip text="Upload documents to create flashcards, mind maps, and AI summaries">
+        <h2 className="heading-2 mb-4">Upload Your Note</h2>
+      </Tooltip>
 
       {/* Upload Form */}
       <div className="mb-8">
@@ -59,20 +62,26 @@ export function UploadNotes() {
         />
 
         {note && (
-          <div className="mt-6 p-4 bg-gray-100 rounded shadow dark:bg-zinc-800">
-            <h3 className="font-semibold">📄 {note.filename}</h3>
-            <p className="text-sm text-gray-600">Extracted text:</p>
-            <pre className="whitespace-pre-wrap text-sm mt-1">
-              {note.extractedText?.slice(0, 500)}...
-            </pre>
-          </div>
+          <Tooltip text="Preview of the text extracted from your uploaded document">
+            <div className="mt-6 p-4 bg-gray-100 rounded shadow dark:bg-zinc-800">
+              <h3 className="font-semibold">📄 {note.filename}</h3>
+              <p className="text-sm text-gray-600">Extracted text:</p>
+              <pre className="whitespace-pre-wrap text-sm mt-1">
+                {note.extractedText?.slice(0, 500)}...
+              </pre>
+            </div>
+          </Tooltip>
         )}
       </div>
 
       {/* Previous Notes */}
-      <h3 className="heading-2 mb-4">Uploaded Notes</h3>
+      <Tooltip text="Your previously uploaded notes - click the icons to create flashcards, mind maps, or AI summaries">
+        <h3 className="heading-2 mb-4">Uploaded Notes</h3>
+      </Tooltip>
       {allNotesArray.length === 0 ? (
-        <p className="text-gray-600 text-sm text-center">No notes uploaded yet.</p>
+        <Tooltip text="Upload your first document to get started with AI-powered study tools">
+          <p className="text-gray-600 text-sm text-center">No notes uploaded yet.</p>
+        </Tooltip>
       ) : (
         <div className="grid grid-cols-1 sml:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
           {allNotesArray.map((note) => (

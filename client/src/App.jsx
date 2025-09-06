@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import ProtectedLayout from './Layouts/ProtectedLayout';
 import DashboardLayout from './Layouts/DashboardLayout';
-import ScrollToTop from './Components/ScrollToTop';
+import { ScrollToTop } from './Components/shared';
 import {
   Dashboard, ChatSmart, GoalBreakdown,
   JournalToughts, MemoryZone, MindMap,

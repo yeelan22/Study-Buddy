@@ -1,8 +1,8 @@
 // components/ThemeToggle.jsx
 import { useEffect } from 'react';
-import { useUIStore } from '../store/uiStore';
+import { useUIStore } from '../../store/uiStore';
 
-export default function ThemeToggle() {
+export function ThemeToggle() {
   const { theme, toggleTheme, initTheme } = useUIStore();
 
   useEffect(() => {

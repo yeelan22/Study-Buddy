@@ -74,8 +74,8 @@ body {
 
 /* Glassy Container (main background section) */
 .glass-container {
-  @apply rounded-3xl shadow-xl border transition-colors duration-300;
-  background: var(--glass-light-bg);
+  @apply md:rounded-3xl md:shadow-xl md:border transition-colors duration-300;
+  background: var(---ligh-card-bg);
   border: 1px solid var(--glass-light-border);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);  /* Standardized for consistency */
@@ -238,6 +238,10 @@ body {
     gap: 12px;
     max-width: 98vw;
     padding: 0 4px;
+  }
+  .dark .glass-container,
+  .glass-container {
+    border: none;
   }
    
 }

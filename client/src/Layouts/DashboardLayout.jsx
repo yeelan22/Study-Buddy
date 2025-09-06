@@ -1,6 +1,6 @@
 // src/layouts/DashboardLayout.jsx
 import { useUIStore } from '../store/uiStore'
-import { SideBar, TopBar } from '../Components'
+import { SideBar, TopBar } from '../Components/shared'
 import { Outlet } from 'react-router-dom'
 
 function DashboardLayout() {

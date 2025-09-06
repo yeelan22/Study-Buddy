@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useUserStore } from '../store/userStore';
 import axios from '../utils/axiosInstance';
-import { ChatInput } from '../Components';
 import robotAvatar from '../assets/robot.png';
-import { MessageBubble } from '../Components/MessageBubble';
+import { MessageBubble, ChatInput } from '../Components/ChatSmart';
 
 export function ChatSmart() {
   const [messages, setMessages] = useState([]);

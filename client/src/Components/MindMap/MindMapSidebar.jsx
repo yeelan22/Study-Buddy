@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Tooltip, NotesCard, ToolCard, FloatingSummaryBox } from '../MindMap';
+import { NotesCard, ToolCard, FloatingSummaryBox } from '../MindMap';
+import { Tooltip }  from "../shared"
 import { Sparkle, StickyNote } from 'lucide-react';
 import { gsap } from 'gsap';
 import { useUIStore } from '../../store/uiStore';

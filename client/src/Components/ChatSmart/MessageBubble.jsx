@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import profile from '../assets/profile.jpg'
-import robot from '../assets/robot.png';
+import profile from '../../assets/profile.jpg'
+import robot from '../../assets/robot.png';
 export function MessageBubble({ message }) {
   const isUser = message.role === 'user';
 

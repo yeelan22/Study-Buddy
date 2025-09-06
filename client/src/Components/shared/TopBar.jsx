@@ -7,8 +7,8 @@ import {
   SquareChevronRight,
   SquareChevronLeft,
 } from 'lucide-react'
-import profile from '../assets/profile.jpg'
-import { useUIStore } from '../store/uiStore'
+import profile from '../../assets/profile.jpg'
+import { useUIStore } from '../../store/uiStore'
 import { NavLink } from 'react-router-dom'
 
 export const TopBar = () => {

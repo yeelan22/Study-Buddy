@@ -1,7 +1,8 @@
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { X as XIcon } from "lucide-react";
-import folder from "../assets/folder.png";
+import folder from "../../assets/folder.png";
+import { Tooltip } from "../shared";
 
 export function UploadCard({ onFileSelect, onUpload, uploading, onClose }) {
   const onDrop = useCallback((acceptedFiles) => {
@@ -24,12 +25,14 @@ export function UploadCard({ onFileSelect, onUpload, uploading, onClose }) {
     <div className="w-full mx-auto mt-4 p-6 card rounded-xl shadow-xl text-white relative">
       {/* Close button */}
       {onClose && (
-        <button 
-          onClick={onClose}
-          className="absolute top-3 right-3 text-gray-400 hover:text-gray-200"
-        >
-          <XIcon className="w-5 h-5" />
-        </button>
+        <Tooltip text="Close upload area">
+          <button 
+            onClick={onClose}
+            className="absolute top-3 right-3 text-gray-400 hover:text-gray-200"
+          >
+            <XIcon className="w-5 h-5" />
+          </button>
+        </Tooltip>
       )}
 
       {/* Folder Icon */}
@@ -50,9 +53,10 @@ export function UploadCard({ onFileSelect, onUpload, uploading, onClose }) {
       {/* Dropzone */}
       <div
         {...getRootProps()}
-        className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
-          isDragActive ? "border-blue dark:bg-gray-700" : "border-gray-300 dark:border-gray-600 dark:bg-gray-800"
+        className={`w-full border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
+          isDragActive ? "border-blue bg-blue-50 dark:bg-gray-700" : "border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800"
         }`}
+        title="Supported formats: PDF, DOCX, JPG, PNG (max 50MB)"
       >
         <input {...getInputProps()} />
         <p className="text-gray-400">
@@ -67,13 +71,15 @@ export function UploadCard({ onFileSelect, onUpload, uploading, onClose }) {
 
       {/* Upload button */}
       <div className="mt-4 flex justify-center">
-        <button
-          onClick={onUpload}
-          disabled={uploading}
-          className="bg-blue hover:bg-blue-600 disabled:bg-gray-500 text-white disabled:cursor-not-allowed px-4 py-2 rounded-md font-semibold transition-colors cursor-pointer"
-        >
-          {uploading ? 'Uploading...' : 'Upload File'}
-        </button>
+        <Tooltip text={uploading ? "Please wait while your file is being processed..." : "Click to upload your selected file"}>
+          <button
+            onClick={onUpload}
+            disabled={uploading}
+            className="bg-blue hover:bg-blue-600 disabled:bg-gray-500 text-white disabled:cursor-not-allowed px-4 py-2 rounded-md font-semibold transition-colors cursor-pointer"
+          >
+            {uploading ? 'Uploading...' : 'Upload File'}
+          </button>
+        </Tooltip>
       </div>
     </div>
   );

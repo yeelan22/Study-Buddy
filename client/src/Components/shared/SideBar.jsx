@@ -1,13 +1,13 @@
 import { NavLink } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useUIStore } from '../store/uiStore';
+import { useUIStore } from '../../store/uiStore';
 import {
   Home, MessageCircle, UploadCloud, CalendarCheck2, Brain,
   BookText, FileStack, Settings, LogOut
 } from 'lucide-react';
-import Dlogo from '../assets/neuroLogo.svg';
-import Llogo from '../assets/LneuroLogo.svg';
+import Dlogo from '../../assets/neuroLogo.svg';
+import Llogo from '../../assets/LneuroLogo.svg';
 
 const mainLinks = [
   { id: 1, name: 'Dashboard', icon: Home, to: '/app/dashboard' },
@@ -112,7 +112,7 @@ export const SideBar = () => {
         variants={sidebarVariants}
         animate={sidebarMode}
         initial={false}
-        className={`hidden md:flex my-4 mx-3 rounded-3xl flex-col h-screen fixed top-0 left-0 z-30 py-6 px-2 transition-colors
+        className={`hidden md:flex my-4 mx-3 rounded-3xl flex-col h-screen fixed top-0  left-0 z-30 py-6 px-2 transition-colors
            glass-container
         `}
         style={{ width: sidebarWidth }}
@@ -133,8 +133,7 @@ export const SideBar = () => {
             animate={{ x: 0 }}
             exit={{ x: -260 }}
             transition={{ type: 'spring', stiffness: 100, damping: 18 }}
-            className={`md:hidden w-[240px] fixed h-screen top-0 left-0 z-50 flex flex-col py-6 px-4 shadow-xl rounded-r-2xl transition-all
-              ${theme === 'dark' ? '' : 'bg-white'}
+            className={`md:hidden w-[240px] fixed h-screen top-0 left-0 z-50 flex rounded-r-3xl flex-col py-6 px-4 shadow-xl transition-all glass-container 
             `}
           >
             <SidebarContent

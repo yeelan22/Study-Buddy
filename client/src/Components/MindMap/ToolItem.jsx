@@ -1,5 +1,5 @@
 import React from "react";
-import { Tooltip } from "../MindMap";
+import { Tooltip } from "../shared";
 
 export function ToolItem({ icon: Icon, label, tooltip, onClick, active }) {
   return (
