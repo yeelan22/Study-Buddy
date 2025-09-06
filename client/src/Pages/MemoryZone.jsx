@@ -12,13 +12,12 @@ export const MemoryZone = () => {
     (async () => {
       await noteStore.processNotes();
       await noteStore.fetchNotes();
+      
+      // After fetching notes, set the selected note if noteId exists
+      if (noteId) {
+        noteStore.setSelectedNoteId(noteId);
+      }
     })();
-  }, []);
-
-  useEffect(() => {
-    if (noteId) {
-      noteStore.setSelectedNoteId(noteId);
-    }
   }, [noteId]);
 
   return (

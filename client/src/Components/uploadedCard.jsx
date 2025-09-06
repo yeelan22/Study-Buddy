@@ -7,6 +7,15 @@ export function UploadedCard({ note }) {
   const handleViewFlashcards = () => {
     // Navigate to memory zone with the specific note ID
     navigate(`/app/memoryZone?noteId=${note._id}`);
+    
+    // Ensure we scroll to top after navigation
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    }, 100); // Small delay to ensure navigation completes
   };
   return (
     <div className="uploadedCard_shape card min-w-64 min-h-48 rounded-xl relative p-4 text-white shadow-md">

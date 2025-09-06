@@ -28,11 +28,14 @@ export const MemoryZoneGrid = () => {
     if (selectedNoteId) {
       const note = getNoteById(selectedNoteId);
       if (note) {
+        console.log('🎯 Setting selected note from URL:', note);
         setSelectedNote(note);
         setSelectedCategory(note.category);
+      } else {
+        console.log('⚠️ Note not found yet, selectedNoteId:', selectedNoteId);
       }
     }
-  }, [selectedNoteId, getNoteById]);
+  }, [selectedNoteId, getNoteById, notes]);
   
   // handler from FlashcardsBox to update schedule
   const handleSessionComplete = async (sessionData) => {
