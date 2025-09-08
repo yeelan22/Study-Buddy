@@ -42,7 +42,7 @@ function DashboardLayout() {
       <div className="flex-1 overflow-y-auto px-4 py-4">
         <div className="max-w-[1440px] mx-auto rounded-3xl glass-container p-4 min-h-full">
           <TopBar />
-          <div className="mt-5">
+          <div className="mt-5 py-3 px-2 sm:px-4">
             <Outlet />
           </div>
         </div>

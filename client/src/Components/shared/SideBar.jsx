@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUIStore } from '../../store/uiStore';
 import {
@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import Dlogo from '../../assets/neuroLogo.svg';
 import Llogo from '../../assets/LneuroLogo.svg';
+import { Tooltip } from './Tooltip';
 
 const mainLinks = [
   { id: 1, name: 'Dashboard', icon: Home, to: '/app/dashboard' },
@@ -152,9 +153,6 @@ export const SideBar = () => {
 const SidebarContent = ({ mode, setSidebarMode, onLinkClick = () => {}, isMobile = false }) => {
   const theme = useUIStore((state) => state.theme);
 
-  // Tooltip state (for accessibility, you can use a library for better tooltips)
-  const [tooltip, setTooltip] = useState(null);
-
   // When a link is clicked in mini mode, collapse sidebar
   const handleLinkClick = () => {
     if (!isMobile && mode === 'open') setSidebarMode('mini');
@@ -175,60 +173,46 @@ const SidebarContent = ({ mode, setSidebarMode, onLinkClick = () => {}, isMobile
       {/* Nav */}
       <nav className="flex flex-col gap-2">
         {mainLinks.map(({ id, name, icon: Icon, to }) => (
-          <NavLink
-            key={id}
-            to={to}
-            onClick={handleLinkClick}
-            className={({ isActive }) =>
-              `group flex items-center gap-3 px-2 py-2 rounded-xl transition-all duration-300 relative
-              ${isActive
-                ? 'bg-blue text-white font-semibold shadow-md'
-                : 'hover:bg-charcoal hover:text-white dark:hover:text-zinc-gray dark:hover:bg-white'
-              }
-              ${mode === 'mini' ? 'justify-center' : ''}
-              `
-            }
-            onMouseEnter={() => setTooltip(mode === 'mini' ? name : null)}
-            onMouseLeave={() => setTooltip(null)}
-          >
-            <Icon className="w-5 h-5" />
-            {mode === 'open' && <span className="text-sm">{name}</span>}
-            {/* Tooltip */}
-            {mode === 'mini' && tooltip === name && (
-              <span className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-3 py-1 rounded bg-zinc-900 text-white text-xs shadow-lg z-50 whitespace-nowrap">
-                {name}
-              </span>
-            )}
-          </NavLink>
-        ))}
-
-        <div className="mt-6 pt-4 border-t border-zinc-200 dark:border-zinc-700">
-          {bottomLinks.map(({ id, name, icon: Icon, to }) => (
+          <Tooltip key={id} text={name}>
             <NavLink
-              key={id}
               to={to}
               onClick={handleLinkClick}
               className={({ isActive }) =>
                 `group flex items-center gap-3 px-2 py-2 rounded-xl transition-all duration-300 relative
                 ${isActive
-                  ? 'text-charcoal font-semibold shadow-md dark:bg-white dark:text-charcoal'
+                  ? 'bg-blue text-white font-semibold shadow-md'
                   : 'hover:bg-charcoal hover:text-white dark:hover:text-zinc-gray dark:hover:bg-white'
                 }
                 ${mode === 'mini' ? 'justify-center' : ''}
                 `
               }
-              onMouseEnter={() => setTooltip(mode === 'mini' ? name : null)}
-              onMouseLeave={() => setTooltip(null)}
             >
               <Icon className="w-5 h-5" />
               {mode === 'open' && <span className="text-sm">{name}</span>}
-              {/* Tooltip */}
-              {mode === 'mini' && tooltip === name && (
-                <span className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-3 py-1 rounded bg-zinc-900 text-white text-xs shadow-lg z-50 whitespace-nowrap">
-                  {name}
-                </span>
-              )}
             </NavLink>
+          </Tooltip>
+        ))}
+
+        <div className="mt-6 flex flex-col pt-4 border-t border-zinc-200 dark:border-zinc-700">
+          {bottomLinks.map(({ id, name, icon: Icon, to }) => (
+            <Tooltip key={id} text={name}>
+              <NavLink
+                to={to}
+                onClick={handleLinkClick}
+                className={({ isActive }) =>
+                  `group flex items-center gap-3 px-2 py-2 rounded-xl transition-all duration-300 relative
+                  ${isActive
+                    ? 'text-charcoal font-semibold shadow-md dark:bg-white dark:text-charcoal'
+                    : 'hover:bg-charcoal hover:text-white dark:hover:text-zinc-gray dark:hover:bg-white'
+                  }
+                  ${mode === 'mini' ? 'justify-center' : ''}
+                  `
+                }
+              >
+                <Icon className="w-5 h-5" />
+                {mode === 'open' && <span className="text-sm">{name}</span>}
+              </NavLink>
+            </Tooltip>
           ))}
         </div>
       </nav>

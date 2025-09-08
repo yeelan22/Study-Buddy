@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Expand, Shrink } from "lucide-react";
+import { Tooltip } from "../shared";
 
 const SPARKLES = Array.from({ length: 12 }).map(() => ({
   top: Math.random() * 90 + 5,
@@ -131,7 +132,7 @@ export function FlashcardsBox({ cards, onSessionComplete }) {
   const flashcardContent = (
     <div
       ref={cardRef}
-      className={`relative w-full mx-auto h-full shadow-md p-6 rounded-2xl ${cardBg} flex flex-col items-center justify-between ${
+      className={`relative w-full mx-auto max-w-xl h-full shadow-md p-6 rounded-2xl ${cardBg} flex flex-col items-center justify-between ${
         isZoomed ? 'max-w-none' : 'max-w-xl'
       }`}
       onMouseEnter={() => setHovered(true)}
@@ -147,13 +148,14 @@ export function FlashcardsBox({ cards, onSessionComplete }) {
     >
       {/* Zoom Button */}
       <div className="absolute top-4 right-4 z-30">
-        <button
-          className="rounded-full bg-white/20 dark:bg-black/20 p-2 text-gray-600 dark:text-gray-300 shadow hover:bg-white/30 dark:hover:bg-black/30 transition-all duration-200 backdrop-blur-sm"
-          onClick={toggleZoom}
-          title={isZoomed ? "Exit fullscreen" : "Enter fullscreen"}
-        >
-          {isZoomed ? <Shrink size={20} /> : <Expand size={20} />}
-        </button>
+        <Tooltip text={isZoomed ? "Exit fullscreen" : "Enter fullscreen"}>
+          <button
+            className="rounded-full bg-white/20 dark:bg-black/20 p-2 text-gray-600 dark:text-gray-300 shadow hover:bg-white/30 dark:hover:bg-black/30 transition-all duration-200 backdrop-blur-sm cursor-pointer"
+            onClick={toggleZoom}
+          >
+            {isZoomed ? <Shrink size={20} /> : <Expand size={20} />}
+          </button>
+        </Tooltip>
       </div>
 
       {/* Sparkles */}
@@ -196,19 +198,20 @@ export function FlashcardsBox({ cards, onSessionComplete }) {
                 <span className={`font-bold text-blue mb-6 ${isZoomed ? 'text-4xl' : 'text-2xl'}`}>How was this session?</span>
                 <div className="flex justify-center gap-4">
                   {["Easy", "Medium", "Hard"].map((level, i) => (
-                    <button
-                      key={level}
-                      className={`px-5 py-2 rounded-lg font-semibold text-base border-2 border-blue
-                        bg-white dark:bg-blue hover:bg-blue-50 dark:hover:bg-blue/40
-                        text-blue dark:text-blue-200 transition-all duration-200 shadow
-                        ${i === 0 ? "hover:ring-2 hover:ring-green-400" : i === 2 ? "hover:ring-2 hover:ring-red-400" : ""}`}
-                      onClick={e => {
-                        e.stopPropagation();
-                        handleRate(level);
-                      }}
-                    >
-                      {level}
-                    </button>
+                    <Tooltip key={level} text={`Rate this session as ${level.toLowerCase()}`}>
+                      <button
+                        className={`px-5 py-2 rounded-lg font-semibold text-base border-2 border-blue
+                          bg-white dark:bg-blue hover:bg-blue-50 dark:hover:bg-blue/40
+                          text-blue dark:text-blue-200 transition-all duration-200 shadow cursor-pointer
+                          ${i === 0 ? "hover:ring-2 hover:ring-green-400" : i === 2 ? "hover:ring-2 hover:ring-red-400" : ""}`}
+                        onClick={e => {
+                          e.stopPropagation();
+                          handleRate(level);
+                        }}
+                      >
+                        {level}
+                      </button>
+                    </Tooltip>
                   ))}
                 </div>
               </motion.div>
@@ -223,16 +226,17 @@ export function FlashcardsBox({ cards, onSessionComplete }) {
                 <span className={`font-bold text-blue mb-4 ${isZoomed ? 'text-3xl' : 'text-xl'}`}>How many questions did you get wrong?</span>
                 <div className="flex justify-center gap-3">
                   {[0, 1, 2, 3, 4].map(n => (
-                    <button
-                      key={n}
-                      className="bg-blue text-white rounded-full px-4 py-2 hover:bg-blue-400 transition shadow"
-                      onClick={e => {
-                        e.stopPropagation();
-                        handleWrongCount(n);
-                      }}
-                    >
-                      {n}
-                    </button>
+                    <Tooltip key={n} text={`${n} wrong answer${n !== 1 ? 's' : ''}`}>
+                      <button
+                        className="bg-blue text-white rounded-full px-4 py-2 hover:bg-blue-400 transition shadow cursor-pointer"
+                        onClick={e => {
+                          e.stopPropagation();
+                          handleWrongCount(n);
+                        }}
+                      >
+                        {n}
+                      </button>
+                    </Tooltip>
                   ))}
                 </div>
               </motion.div>
@@ -287,19 +291,20 @@ export function FlashcardsBox({ cards, onSessionComplete }) {
       {!showRatingCard && (
         <div className="flex justify-center gap-2 mt-4 z-20 relative">
           {validCards.map((_, i) => (
-            <button
-              key={i}
-              className={`h-2 w-2 rounded-full transition-all duration-200 ${
-                i === index ? "bg-blue scale-125" : "bg-gray-300 dark:bg-gray-700"
-              }`}
-              onClick={e => {
-                e.stopPropagation();
-                setIndex(i);
-                setShowAnswer(false);
-                setShowRatingCard(false);
-              }}
-              aria-label={`Go to card ${i + 1}`}
-            />
+            <Tooltip key={i} text={`Go to card ${i + 1} of ${validCards.length}`}>
+              <button
+                className={`h-2 w-2 rounded-full transition-all duration-200 cursor-pointer ${
+                  i === index ? "bg-blue scale-125" : "bg-gray-300 dark:bg-gray-700"
+                }`}
+                onClick={e => {
+                  e.stopPropagation();
+                  setIndex(i);
+                  setShowAnswer(false);
+                  setShowRatingCard(false);
+                }}
+                aria-label={`Go to card ${i + 1}`}
+              />
+            </Tooltip>
           ))}
         </div>
       )}
@@ -308,30 +313,34 @@ export function FlashcardsBox({ cards, onSessionComplete }) {
       {!showRatingCard && (
         <>
           <div className="absolute top-1/2 left-16 -translate-y-1/2 z-30">
-            <button
-              className="rounded-full bg-violet-100 dark:bg-violet-900/60 p-2 text-blue-400 dark:text-violet-300 shadow hover:bg-violet-200 dark:hover:bg-violet-800 transition"
-              onClick={e => {
-                e.stopPropagation();
-                goPrev();
-                setShowRatingCard(false);
-              }}
-              disabled={index === 0}
-            >
-              <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            </button>
+            <Tooltip text={index === 0 ? "First card" : "Previous card"}>
+              <button
+                className="rounded-full bg-violet-100 dark:bg-violet-900/60 p-2 text-blue-400 dark:text-violet-300 shadow hover:bg-violet-200 dark:hover:bg-violet-800 transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                onClick={e => {
+                  e.stopPropagation();
+                  goPrev();
+                  setShowRatingCard(false);
+                }}
+                disabled={index === 0}
+              >
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </button>
+            </Tooltip>
           </div>
           <div className="absolute top-1/2 right-2 -translate-y-1/2 z-30">
-            <button
-              className="rounded-full bg-violet-100 dark:bg-violet-900/60 p-2 text-violet-600 dark:text-violet-300 shadow hover:bg-violet-200 dark:hover:bg-violet-800 transition"
-              onClick={e => {
-                e.stopPropagation();
-                goNext();
-                setShowRatingCard(false);
-              }}
-              disabled={index === validCards.length - 1}
-            >
-              <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            </button>
+            <Tooltip text={index === validCards.length - 1 ? "Last card" : "Next card"}>
+              <button
+                className="rounded-full bg-violet-100 dark:bg-violet-900/60 p-2 text-violet-600 dark:text-violet-300 shadow hover:bg-violet-200 dark:hover:bg-violet-800 transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                onClick={e => {
+                  e.stopPropagation();
+                  goNext();
+                  setShowRatingCard(false);
+                }}
+                disabled={index === validCards.length - 1}
+              >
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </button>
+            </Tooltip>
           </div>
         </>
       )}

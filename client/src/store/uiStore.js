@@ -53,11 +53,14 @@ export const useUIStore = create((set, get) => {
 
     // 🧠 Mind Map State
     mindMapData: { nodes: [], edges: [] },
+    isGeneratingMindMap: false,
 
     setMindMapData: ({ nodes, edges }) => {
       set({ mindMapData: { nodes: nodes || [], edges: edges || [] } });
       debouncedSave();
     },
+
+    setGeneratingMindMap: (isGenerating) => set({ isGeneratingMindMap: isGenerating }),
 
     updateNode: (id, data) => {
       set((state) => ({

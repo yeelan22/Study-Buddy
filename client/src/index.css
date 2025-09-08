@@ -197,7 +197,7 @@ html {
 
 .memoryzone-grid {
   display: grid;
-  grid-template-columns: 1fr 1.2fr 1fr;
+  grid-template-columns: 1fr 1.2fr 1.1fr;
   grid-template-rows: auto auto auto;
   gap: 12px;
   width: 100%;
@@ -226,11 +226,11 @@ html {
 @media (min-width: 720px) and (max-width: 1043px) {
   .memoryzone-grid {
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 180px 100px 120px 120px;
+    grid-template-rows: auto auto;
     grid-template-areas:
       "torevise flashcards"
-      "calendar calendar"
-      "quote scheduled"
+      "calendar quote"
+      "scheduled  quote"
       "stats stats";
     max-width: 700px;
   }

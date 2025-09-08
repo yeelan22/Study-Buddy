@@ -65,9 +65,9 @@ export function CalendarBox({ schedule = [] }) {
     d.getFullYear() === today.getFullYear();
 
   return (
-    <div className=" card card-hover p-6 min-w-[320px] mx-auto transition-colors duration-300">
+    <div className="card p-6 min-w-[300px] max-w-xl mx-auto transition-colors duration-300 h-full">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 max-w-[300px] mx-auto">
         <button onClick={prevMonth} className="heading-2 rounded-md p-1 transition-colors cursor-pointer">
           <ChevronLeft />
         </button>
@@ -82,14 +82,14 @@ export function CalendarBox({ schedule = [] }) {
       </div>
       {/* Days of week */}
 
-      <div className="grid grid-cols-7 mb-2">
+      <div className="grid grid-cols-7 mb-2 max-w-[300px] mx-auto">
         {daysShort.map((d, i) => (
           <div key={i} className="text-zinc-400 dark:text-indigo-200 font-bold text-center text-base tracking-wide">{d}</div>
         ))}
       </div>
 
       {/* Calendar grid */}
-      <div className="grid grid-cols-7 gap-2">
+      <div className="grid grid-cols-7 gap-0.5 max-w-[300px] mx-auto">
         {matrix.flat().map((day, i) => {
           const isSelected = day && date.getDate() === day && view.month === date.getMonth() && view.year === date.getFullYear();
           const dObj = day ? new Date(view.year, view.month, day) : null;
@@ -141,7 +141,7 @@ export function CalendarBox({ schedule = [] }) {
 
 
       {/* Events for selected day */}
-      <div className="mt-4 ">
+      <div className="mt-4 max-w-[300px] mx-auto h-full">
         <h3 className="subheading mb-2">
           Revisions on {date.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' })}
         </h3>

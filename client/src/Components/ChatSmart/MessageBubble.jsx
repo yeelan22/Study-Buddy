@@ -1,13 +1,14 @@
 import { motion } from 'framer-motion';
-import profile from '../../assets/profile.jpg'
 import robot from '../../assets/robot.png';
+import { useUserStore } from '../../store/userStore';
 export function MessageBubble({ message }) {
   const isUser = message.role === 'user';
+  const {avatar} = useUserStore(state => state.user)
 
   return (
     <div className={`flex items-start gap-3 ${isUser ? 'justify-end mr-2' : 'ml-2'}`}>
       {!isUser && (
-        <div className="w-8 h-8 rounded-full bg-zinc-300 dark:bg-zinc-600 overflow-hidden">
+        <div className="w-9 h-9 rounded-full overflow-hidden">
           {/* Placeholder for avatar */}
           <img src={robot} alt="avatar" className="w-full h-full object-cover" />
         </div>
@@ -27,9 +28,9 @@ export function MessageBubble({ message }) {
       </motion.div>
 
       {isUser && (
-        <div className="w-8 h-8 rounded-full bg-zinc-500 dark:bg-zinc-700 overflow-hidden">
+        <div className="w-8 h-8 rounded-full  overflow-hidden">
           {/* Placeholder for user avatar */}
-          <img src={profile} alt="avatar" className="w-full h-full object-cover" />
+          <img src={`${avatar}`} alt="avatar" className="w-full h-full object-cover" />
         </div>
       )}
     </div>

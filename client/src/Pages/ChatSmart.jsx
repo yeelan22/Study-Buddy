@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useUserStore } from '../store/userStore';
 import axios from '../utils/axiosInstance';
-import robotAvatar from '../assets/robot.png';
+import neuron from '../assets/neuroLogo.svg';
 import { MessageBubble, ChatInput } from '../Components/ChatSmart';
 
 export function ChatSmart() {
@@ -122,7 +122,7 @@ export function ChatSmart() {
       {/* Chat box */}
       <div className="relative flex-1 overflow-hidden flex flex-col">
         <div className="absolute inset-0 pointer-events-none flex justify-center items-start opacity-10 z-0">
-          <img src={robotAvatar} alt="robot" className="w-[300px] h-auto object-contain" />
+          <img src={neuron} alt="neuron" className="w-[300px] h-auto object-contain" />
         </div>
 
         <div className="flex-1 overflow-y-auto bg-transparent px-6 pt-6 pb-8 custom-scrollbar z-10">

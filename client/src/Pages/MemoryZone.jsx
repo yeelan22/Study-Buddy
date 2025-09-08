@@ -21,7 +21,7 @@ export const MemoryZone = () => {
   }, [noteId]);
 
   return (
-    <div className="flex justify-center items-start py-4 w-full px-2 sm:px-4">
+    <div className="flex justify-center items-start w-full">
       <MemoryZoneGrid />
     </div>
   );

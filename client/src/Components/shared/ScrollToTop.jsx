@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 // Function that can be called directly to scroll to top
-export const scrollToTop = () => {
+export const scrollTop = () => {
   // Find the main scrollable container (the one with overflow-y-auto)
   const scrollableContainer = document.querySelector('.flex-1.overflow-y-auto') || 
                              document.querySelector('[class*="overflow-y-auto"]') ||
@@ -50,7 +50,7 @@ export const ScrollToTop = () => {
   const { pathname, search } = useLocation();
 
   useEffect(() => {
-    scrollToTop();
+    scrollTop();
   }, [pathname, search]);
 
   return null; // This component doesn't render anything

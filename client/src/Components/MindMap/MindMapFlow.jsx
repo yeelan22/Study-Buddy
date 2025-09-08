@@ -10,6 +10,7 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import { useUIStore } from '../../store/uiStore';
 import { MindMapSidebar } from './MindMapSidebar';
+import { NodeContextMenu } from './NodeContextMenu';
 
 const NODE_COLORS = {
   title: { bg: '#1976d2', text: '#fff' },
@@ -24,10 +25,6 @@ const NODE_COLORS = {
   7: { bg: '#ffccbc', text: '#bf360c' },
 };
 
-const COLOR_PALETTE = [
-  '#1976d2', '#00bfae', '#ffb300', '#f06292',
-  '#7e57c2', '#26a69a', '#ff7043', '#bdbdbd'
-];
 
 function EditableNode({ id, data, selected, onContextMenu }) {
   const color = data.bg
@@ -61,6 +58,7 @@ function EditableNode({ id, data, selected, onContextMenu }) {
 
 export function MindMapFlow() {
   const mindMap = useUIStore((s) => s.mindMapData);
+  const isGeneratingMindMap = useUIStore((s) => s.isGeneratingMindMap);
   const updateNode = useUIStore((s) => s.updateNode);
   const deleteNode = useUIStore((s) => s.deleteNode);
   const updateNodePosition = useUIStore((s) => s.updateNodePosition);
@@ -113,7 +111,34 @@ export function MindMapFlow() {
   const onNodeContextMenu = useCallback((e, node) => {
     e.preventDefault();
     e.stopPropagation();
-    setContextMenu({ nodeId: node.id, x: e.clientX, y: e.clientY });
+    
+    // Get the node's position on screen
+    const nodeElement = e.currentTarget;
+    const nodeRect = nodeElement.getBoundingClientRect();
+    
+    // Calculate position relative to the viewport
+    // Center the menu horizontally relative to the node
+    const menuWidth = 160; // Approximate menu width
+    const x = Math.max(10, nodeRect.left + (nodeRect.width / 2) - (menuWidth / 2));
+    const y = nodeRect.bottom + 10; // Just below the node
+    
+    // Ensure menu doesn't go off-screen horizontally
+    const viewportWidth = window.innerWidth;
+    const finalX = Math.min(x, viewportWidth - menuWidth - 10);
+    
+    console.log('Context menu triggered:', { 
+      nodeId: node.id, 
+      x: finalX, 
+      y, 
+      nodeRect,
+      viewportWidth,
+      menuWidth
+    });
+    
+    setContextMenu({ 
+      nodeId: node.id, 
+      position: { x: finalX, y }
+    });
   }, []);
 
   const onPaneClick = useCallback(() => setContextMenu(null), []);
@@ -123,20 +148,20 @@ export function MindMapFlow() {
     updateNodePosition(node.id, node.position);
   }, [updateNodePosition]);
 
-  const handleEdit = () => {
-    setEditingNode(contextMenu.nodeId);
-    const node = mindMap.nodes.find(n => n.id === contextMenu.nodeId);
+  const handleEdit = (nodeId) => {
+    setEditingNode(nodeId);
+    const node = mindMap.nodes.find(n => n.id === nodeId);
     setEditValue(node.label);
     setContextMenu(null);
   };
 
-  const handleDelete = () => {
-    deleteNode(contextMenu.nodeId);
+  const handleDelete = (nodeId) => {
+    deleteNode(nodeId);
     setContextMenu(null);
   };
 
-  const handleColorChange = (bg) => {
-    updateNode(contextMenu.nodeId, { bg, text: '#fff' });
+  const handleColorChange = (nodeId, bg) => {
+    updateNode(nodeId, { bg, text: '#fff' });
     setContextMenu(null);
   };
 
@@ -176,13 +201,14 @@ export function MindMapFlow() {
         <Background variant="dots" color="#b3e5fc" gap={18} size={1.5} />
       </ReactFlow>
 
+
       {/* Inline edit */}
       {editingNode && (
         <div
           style={{
             position: 'fixed',
-            top: (contextMenu?.y || 100) + 30,
-            left: (contextMenu?.x || 100),
+            top: (contextMenu?.position?.y || 100) + 30,
+            left: (contextMenu?.position?.x || 100),
             zIndex: 10001,
             background: '#fff',
             borderRadius: 12,
@@ -211,38 +237,15 @@ export function MindMapFlow() {
       )}
 
       {/* Context menu */}
-      {contextMenu && (
-        <div
-          style={{
-            position: 'fixed',
-            top: contextMenu.y,
-            left: contextMenu.x,
-            zIndex: 10000,
-            background: '#fff',
-            borderRadius: 12,
-            boxShadow: '0 4px 24px #0002',
-            padding: 16,
-            minWidth: 160,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 10,
-          }}
-        >
-          <button onClick={handleEdit}>✏️ Edit</button>
-          <div style={{ fontSize: 13, marginBottom: 6, color: '#888' }}>Change color:</div>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 6 }}>
-            {COLOR_PALETTE.map((c) => (
-              <div key={c} onClick={() => handleColorChange(c)} style={{
-                width: 26, height: 26, borderRadius: '50%',
-                background: c, border: '2px solid #fff',
-                boxShadow: '0 1px 4px #0002',
-                cursor: 'pointer',
-              }} />
-            ))}
-          </div>
-          <button onClick={handleDelete} style={{ color: '#d32f2f' }}>🗑️ Delete</button>
-        </div>
-      )}
+      <NodeContextMenu
+        isOpen={!!contextMenu}
+        onClose={() => setContextMenu(null)}
+        position={contextMenu?.position}
+        nodeId={contextMenu?.nodeId}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        onColorChange={handleColorChange}
+      />
 
       <MindMapSidebar />
     </>

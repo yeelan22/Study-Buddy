@@ -32,7 +32,7 @@ export function ToReviseListBox({
   }));
 
   return (
-    <div className="card card-hover flex flex-col gap-6 p-6 h-full w-full max-w-md">
+    <div className="card flex flex-col gap-6 p-6 h-full w-full max-w-xl mx-auto">
       <div>
         <h3 className="heading-2 mb-4">All Notes</h3>
         <Timeline

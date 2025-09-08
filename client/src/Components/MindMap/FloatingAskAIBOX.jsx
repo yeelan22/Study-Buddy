@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { MessageBubble } from "../ChatSmart/MessageBubble";
 import { ChatInput } from "../ChatSmart/ChatInput";
+import { FloatingDialog } from "../shared";
 import axiosInstance from "../../utils/axiosInstance";
 import { useUserStore } from "../../store/userStore";
 import { useUIStore } from "../../store/uiStore";
 
-export function FloatingAskAIBOX({ onClose }) {
+export function FloatingAskAIBOX({ isOpen, onClose }) {
   const [messages, setMessages] = useState([
     { role: "assistant", content: "How can I help you with this mind map?" },
   ]);
@@ -126,34 +127,13 @@ export function FloatingAskAIBOX({ onClose }) {
   };
 
   return (
-    <div
-      className="fixed z-[100] top-1/2 left-1/2"
-      style={{
-        transform: "translate(-50%, -50%)",
-        minWidth: 350,
-        maxWidth: 400,
-        width: "90vw",
-        borderRadius: 28,
-        background: "rgba(24,32,54,0.97)",
-        boxShadow: "0 8px 40px 0 rgba(0,0,0,0.18)",
-        padding: 0,
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-      }}
-      onMouseDown={(e) => e.stopPropagation()}
+    <FloatingDialog
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Ask AI"
+      size="md"
+      className="min-w-[350px] max-w-[400px] w-[90vw]"
     >
-      <div className="flex items-center justify-between px-6 pt-5 pb-2">
-        <h2 className="text-xl font-semibold text-white">Ask AI</h2>
-        <button
-          onClick={onClose}
-          className="text-zinc-400 hover:text-white text-2xl font-bold"
-          style={{ lineHeight: 1 }}
-        >
-          ×
-        </button>
-      </div>
-
       <div
         ref={chatAreaRef}
         className="flex-1 px-6 py-2 overflow-y-auto custom-scrollbar"
@@ -173,6 +153,6 @@ export function FloatingAskAIBOX({ onClose }) {
       <div className="px-6 py-4 bg-white/5 border-t border-white/10">
         <ChatInput onSend={handleSend} />
       </div>
-    </div>
+    </FloatingDialog>
   );
 }

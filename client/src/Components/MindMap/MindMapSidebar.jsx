@@ -155,13 +155,14 @@ export function MindMapSidebar() {
       {showSummary && summary && open === 'tools' && (
         <FloatingSummaryBox
           summary={summary}
+          isOpen={showSummary}
           onClose={closeAll}
         />
       )}
 
       {/* Floating Ask AI box */}
       {showAskAI && open === 'tools' && (
-        <FloatingAskAIBOX onClose={closeAll} />
+        <FloatingAskAIBOX isOpen={showAskAI} onClose={closeAll} />
       )}
     </>
   );

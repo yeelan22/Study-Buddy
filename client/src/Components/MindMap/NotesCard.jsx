@@ -3,35 +3,43 @@ import React from 'react';
 import { NotesList } from '../MindMap';
 import { StickyNote } from 'lucide-react';
 import { useUIStore } from '../../store/uiStore';
+import { Loader } from '../shared';
 import axiosInstance from '../../utils/axiosInstance';
 
 export function NotesCard({ onClose }) {
   const setSummary = useUIStore((s) => s.setSelectedNoteSummary);
   const setMindMapData = useUIStore((s) => s.setMindMapData);
+  const setGeneratingMindMap = useUIStore((s) => s.setGeneratingMindMap);
+  const isGeneratingMindMap = useUIStore((s) => s.isGeneratingMindMap);
 
   async function handleNoteClick(note) {
-  try {
-    const res = await axiosInstance.post(`/mindmap/${note._id}`);
-    console.log("📜 Note data:", res.data);
+    try {
+      // Start loading
+      setGeneratingMindMap(true);
+      
+      const res = await axiosInstance.post(`/mindmap/${note._id}`);
+      console.log("📜 Note data:", res.data);
 
-    const { summary, title, nodes, edges } = res.data;
+      const { summary, title, nodes, edges } = res.data;
 
-    // Update UI stores
-    setSummary(`<b># Main Subject:</b><br/><br/>- <b>${title}</b><br/><br/>${summary}`);
-    setMindMapData({
-      nodes: nodes || [],
-      edges: edges || [],
-    });
+      // Update UI stores
+      setSummary(`<b># Main Subject:</b><br/><br/>- <b>${title}</b><br/><br/>${summary}`);
+      setMindMapData({
+        nodes: nodes || [],
+        edges: edges || [],
+      });
 
-    useUIStore.getState().setSelectedNoteId(note._id);
+      useUIStore.getState().setSelectedNoteId(note._id);
 
+      console.log("🧠 Mind map data:", { nodes, edges });
+    } catch (err) {
+      console.error("❌ Failed to load mind map:", err);
+    } finally {
+      // Stop loading
+      setGeneratingMindMap(false);
+    }
 
-    console.log("🧠 Mind map data:", { nodes, edges });
-  } catch (err) {
-    console.error("❌ Failed to load mind map:", err);
-  }
-
-  onClose(); // close sidebar
+    onClose(); // close sidebar
   }
 
 
