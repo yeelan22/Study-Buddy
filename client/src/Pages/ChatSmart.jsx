@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useUserStore } from '../store/userStore';
 import axios from '../utils/axiosInstance';
 import neuron from '../assets/neuroLogo.svg';
+import robotAvatar from '../assets/robot.png';
 import { MessageBubble, ChatInput } from '../Components/ChatSmart';
 
 export function ChatSmart() {
