@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'https://backend-study-buddy-production.up.railway.app/api' || 'http://localhost:5000/api',
+  baseURL: 'https://backend-study-buddy-production.up.railway.app/api' || 'http://localhost:5001/api',
 });
 
 // Automatically attach token if exists
